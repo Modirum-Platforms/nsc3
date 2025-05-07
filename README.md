@@ -116,7 +116,7 @@ With access to the internet:
     git clone https://github.com/Modirum-Platforms/nsc3.git
 
 If you don't have access to the internet on the machine that NSC3 will be installed:
-- Download a ZIP of the repository from https://github.com/Modirum-Platforms/nsc3
+- Download a ZIP of the Github repository via this link https://github.com/Modirum-Platforms/nsc3/archive/refs/heads/main.zip
 - Move the ZIP to the NSC3 machine's $HOME folder
 - Run the following commands:
 
@@ -265,7 +265,7 @@ With internet access:
     git pull -f
 
 Without internet access:
-- Download a ZIP of the repository from https://github.com/Modirum-Platforms/nsc3
+- Download a ZIP of the Github repository via this link https://github.com/Modirum-Platforms/nsc3/archive/refs/heads/main.zip
 - Move the ZIP to the NSC3 machine's $HOME folder
 - Run the following commands:
 
