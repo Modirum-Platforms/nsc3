@@ -1,11 +1,11 @@
 #!/bin/bash
 ## NSC3 registry:
-export NSC3REG="registrynsion.azurecr.io"
+export NSC3REG="registry.menturagroup.com/nsc3/docker-images"
 export DOCKERCOMPOSECOMMAND="docker-compose"
 TIMESTAMP=$(date +%Y%m%d%H%M)
 source ./nsc-host.env
 chmod u+x *.sh
-PREVRELEASE=$(cat $NSCHOME/docker-compose.yml | grep registrynsion.azurecr.io/main-postgres: | cut -d\: -f3) 2> /dev/null
+PREVRELEASE=$(cat $NSCHOME/docker-compose.yml | grep registry.menturagroup.com/nsc3/docker-images/main-postgres: | cut -d\: -f3) 2> /dev/null
 export EXTIP=$(host $PUBLICIP | awk '{print $4}') 2> /dev/null
 export MINIOSECRET=$(sudo docker inspect nsc-minio | grep MINIO_ROOT_PASSWORD= | awk '{print $1}' | sed s/MINIO_ROOT_PASSWORD=// | sed -e 's/[""]//g') 2> /dev/null
 silentmode=false

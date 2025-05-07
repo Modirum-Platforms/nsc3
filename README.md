@@ -31,12 +31,11 @@ NSC3 backend installation guides and scripts for single node server configuratio
 - Team-Bridge specific port (Team-Bridge server): 64660
 - [x] SSL certifications for the service domain. Human readable (PEM) format. A private key file named as privkey.pem. A full chained certification file named as fullchain.pem
 - [x] Server domain name is registered to DNS services. 
-- [x] Access account to NSION container registry is available.
 - [x] Linux account with sudo privileges for operating system.
 - [x] Following 3rd party apps are needed: git, wget and curl. Most of them are by default included as part of a linux basic setup. However please ensure beforehand availability on your local linux setup. 
 
 
-## NSC3 backend installation guidance for single node via public NSION repository:
+## NSC3 backend installation guidance for single node:
 ### Default file system locations:
 
 - NSC3 Installation folder: ```$HOME/nsc3```, However this location is configurable. Instruction are referring for ```$HOME/nsc3``` folder. The subfolder "nsc3" will be created automatically while installation process.
@@ -64,7 +63,7 @@ https://github.com/NSION/nsc3/blob/main/nsc3-monitoring/README.md
 ### NSC3 installation:
 #### Install Docker:
 Please follow the latest installation instructions by Docker community https://docs.docker.com/engine/install/ 
-As example Ubuntu:
+As an example, installation for Ubuntu with access to the internet:
 
 ##### Update the apt package index and install packages to allow apt to use a repository over HTTPS:
 ```
@@ -108,29 +107,54 @@ sudo apt install git
 #### Setup installation folder:
 
 - Copy the SSL cert files privkey.pem and fullchain.pem to your home folder. As this example $HOME 
-- Clone git project from NSION SW repository
+- Clone git project from Modirum Platforms NSC3 repository
 
-#### Gather installation scripts from NSION github:
+#### Gather installation scripts from Modirum Platforms github:
+With access to the internet:
 
     cd $HOME
-    git clone https://github.com/NSION/nsc3.git
+    git clone https://github.com/Modirum-Platforms/nsc3.git
+
+If you don't have access to the internet on the machine that NSC3 will be installed:
+- Download a ZIP of the Github repository via this link https://github.com/Modirum-Platforms/nsc3/archive/refs/heads/main.zip
+- Move the ZIP to the NSC3 machine's $HOME folder
+- Run the following commands:
+
+```
+    cd $HOME
+    mkdir $HOME/nsc3
+    unzip nsc3-main.zip -d $HOME/nsc3
+```
     
 #### Grant execute rights for the installation script:
 
     cd $HOME/nsc3
     chmod u+x nsc3-install.sh
     
-#### Login to NSION docker registry:
+#### Gaining access to the docker images:
+
+Via Docker registry:
 
     cd $HOME/nsc3
     sudo docker login registrynsion.azurecr.io
     
     <Registry crentials will be delivered separately>
+
+Via delivered tar file:
+- Move the delivered tar file to the NSC3 machine's $HOME folder
+- Load the images:
+
+```
+    cd $HOME
+    tar -xvf export_release_<YOUR_RELEASE_NUMBER_HERE>.tar.xz
+    cd $HOME/export
+    ls -1 *.tar | xargs --no-run-if-empty -L 1 docker load -i
+```
         
-#### Install Docker-compose:
+#### Install Docker Compose:
 
 Please follow the latest installation instructions by Docker community https://docs.docker.com/compose/install/.
-As example Ubuntu:
+As an example, installation for Ubuntu with access to the internet:
 
 Remove old docker-compose:
 
@@ -234,10 +258,34 @@ NSC3 Admin documentation: https://www.nsiontec.com/user-guide-webapp-admin/
 
 Download the latest scripts from github:
 
+With internet access:
+
     cd $HOME/nsc3
     chmod u-x *.sh
     git pull -f
-    
+
+Without internet access:
+- Download a ZIP of the Github repository via this link https://github.com/Modirum-Platforms/nsc3/archive/refs/heads/main.zip
+- Move the ZIP to the NSC3 machine's $HOME folder
+- Run the following commands:
+
+```
+    cd $HOME
+    mkdir $HOME/nsc3
+    unzip -o nsc3-main.zip -d $HOME/nsc3
+```
+
+If images were loaded from the delivered tar file, you will be delivered a new tar file with updated images:
+- Move the delivered tar file to the NSC3 machine's $HOME folder
+- Load the images:
+
+```
+    cd $HOME
+    tar -xvf export_release_<YOUR_RELEASE_NUMBER_HERE>.tar.xz
+    cd $HOME/export
+    ls -1 *.tar | xargs --no-run-if-empty -L 1 docker load -i
+```
+
 Grant execute rights for the upgrade script:
 
     chmod u+x nsc3-upgrade.sh
@@ -257,17 +305,17 @@ Note that release tag format is
 Stop NSC3 services:
 
     cd $HOME/nsc3
-    sudo docker-compose down
+    sudo docker compose down
 
 Start NSC3 services:
 
     cd $HOME/nsc3
-    sudo docker-compose up -d  
+    sudo docker compose up -d  
 
 Restart NSC3 container:
 
     cd $HOME/nsc3
-    sudo docker-compose restart [NSC3 container]
+    sudo docker compose restart [NSC3 container]
 
 #### Monitoring NSC3 runtime environment:
 
@@ -310,7 +358,7 @@ If the file space in the Docker root directory is not adequate, you must relocat
 1. Stop NSC3 services:
 ```
 cd $HOME/nsc3
-sudo docker-compose down
+sudo docker compose down
 ```
 2. Stop Docker services:
 ```
@@ -359,7 +407,7 @@ sudo docker-compose up -d
 Try to restart NSC3 services:
 
     cd $HOME/nsc3
-    sudo docker-compose up -d 
+    sudo docker compose up -d 
     
 Check https status: 
 Expected result if ok, "HTTP/2 200"
@@ -435,7 +483,7 @@ cat fullchain.pem | grep "BEGIN" | wc -l
 E.g if you have changed SSL cert files then nsc-gateway-service requires restarting in order to take into use a new cert file.
 
 ```
-sudo docker-compose restart nsc-gateway
+sudo docker compose restart nsc-gateway
 ```
 
 ##### Check TCP IP route from external network to NSC3 https port:

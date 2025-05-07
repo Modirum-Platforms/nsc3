@@ -1,6 +1,6 @@
 #!/bin/bash
 ## NSC3 registry:
-export NSC3REG="registrynsion.azurecr.io"
+export NSC3REG="registry.menturagroup.com/nsc3/docker-images"
 export DOCKERCOMPOSECOMMAND="docker-compose"
 export MINIOSECRET=$(sudo docker inspect nsc-minio | grep MINIO_ROOT_PASSWORD= | awk '{print $1}' | sed s/MINIO_ROOT_PASSWORD=// | sed -e 's/[""]//g') 2> /dev/null
 

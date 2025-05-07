@@ -1,6 +1,6 @@
 #!/bin/bash
 ## NSC3 registry:
-export NSC3REG="registrynsion.azurecr.io"
+export NSC3REG="registry.menturagroup.com/nsc3/docker-images"
 source ./nsc-host.env
 silentmode=false
 if [ ${1+"true"} ]; then

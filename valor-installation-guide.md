@@ -275,12 +275,12 @@ Note that release tag format is
 Stop Valor services:
 
     cd $HOME/nsc3
-    sudo docker-compose -f docker-compose-valor.yml  down
+    sudo docker compose -f docker-compose-valor.yml  down
 
 Start NSC3 services:
 
     cd $HOME/nsc3
-    sudo docker-compose -f docker-compose-valor.yml up -d  
+    sudo docker compose -f docker-compose-valor.yml up -d  
 
 Monitor container logs via docker logs:
 
@@ -306,7 +306,7 @@ Container status:
 Try to restart Valor services:
 
     cd $HOME/nsc3
-    sudo docker-compose -f docker-compose-valor.yml up -d 
+    sudo docker compose -f docker-compose-valor.yml up -d 
     
 Check https status: 
 Expected result if ok, "HTTP/2 200"
@@ -378,7 +378,7 @@ Note the tag that image gets when loaded
     - Use the tag that image got when loaded; here as an example :release-3.15 . Use actual path in volume mount parameter (-v)
 
 ```
-sudo docker run -d -v /home/exampleuser/demodata/faces:/data/wanted_faces --net nsc-network --restart unless-stopped --name nsc-recipe-face-comparison-service registrynsion.azurecr.io/nsc-recipe-face-comparison-service:release-3.15
+sudo docker run -d -v /home/exampleuser/demodata/faces:/data/wanted_faces --net nsc-network --restart unless-stopped --name nsc-recipe-face-comparison-service registry.menturagroup.com/nsc3/docker-images/nsc-recipe-face-comparison-service:release-3.15
 ```
 
 #### Object detection
@@ -399,10 +399,10 @@ Note the tags that images get when loaded.
 Use the tag that images got when loaded; here as an example :release-3.15
 
 ```
-sudo docker run -d --net nsc-network -e "NVIDIA_VISIBLE_DEVICES=all" -e "NVIDIA_DRIVER_CAPABILITIES=all" --runtime=nvidia --restart unless-stopped --name nsc-recipe-object-detection-service-onnx registrynsion.azurecr.io/nsc-recipe-object-detection-service-onnx:release-3.15
+sudo docker run -d --net nsc-network -e "NVIDIA_VISIBLE_DEVICES=all" -e "NVIDIA_DRIVER_CAPABILITIES=all" --runtime=nvidia --restart unless-stopped --name nsc-recipe-object-detection-service-onnx registry.menturagroup.com/nsc3/docker-images/nsc-recipe-object-detection-service-onnx:release-3.15
 ```
 
 ```
-sudo docker run -d --net nsc-network --restart unless-stopped --name nsc-recipe-object-detection-service registrynsion.azurecr.io/nsc-recipe-object-detection-service:release-3.15
+sudo docker run -d --net nsc-network --restart unless-stopped --name nsc-recipe-object-detection-service registry.menturagroup.com/nsc3/docker-images/nsc-recipe-object-detection-service:release-3.15
 ```
 

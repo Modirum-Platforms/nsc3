@@ -23,7 +23,7 @@ Pre-requisites for installation:
 
 Bi-Directional pipe combines both elements client and server that need to installed at both end. Dataflow point of view it is similar as in case of One-Directional link but along two pipes outbound and inbound directions. 
 
-In order to get this concept working accordingly, Bi-Directional pipe requires two organizations that need to be created on both servers. Inside of NSC3 server those two independent organisations can be link together by JontOps tasks. Note that Joint Operations functionality in NSC3 requires dedicated license.
+In order to get this concept working accordingly, Bi-Directional pipe requires two organizations that need to be created on both servers. Inside of NSC3 server those two independent organisations can be link together by JointOps tasks. Note that Joint Operations functionality in NSC3 requires dedicated license.
 
 Pre-requisites for installation:
 - 2 x NSC3 servers installed
