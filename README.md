@@ -245,9 +245,9 @@ curl --cert-status -v https://$PUBLICIP 2>&1 | awk 'BEGIN { cert=0 } /^\* Server
 
 Login to the NSC3 web app as admin
 - Initial admin login. org: admin login user and password: admin. System is proposing to change password right after first successful login session.
-- Download a instance key via NSC3 admin/license UI. Licenses Tab / Server license / Set new NSC3 license / Download Instance key
-- Send the instance key file via NSION Jira Service desk support portal.
-- NSION will prepare and return a corresponding license key file back. No need to left UI open while waiting
+- Download an instance key via NSC3 admin/license UI. Licenses Tab / Server license / Set new NSC3 license / Download Instance key
+- Send the instance key file via Modirum Platforms Jira Service desk support portal.
+- Modirum Platforms will prepare and return a corresponding license key file back. No need to left UI open while waiting
 - Insert license key via NSC3 admin/license UI. Licenses Tab / Server license / Set new NSC3 license / Insert license key (download from local computer via Web app)
 
 #### Configure NSC organisation
