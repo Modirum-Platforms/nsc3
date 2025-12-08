@@ -2,7 +2,7 @@
 ## Project description:
 NSC3 backend installation guides and scripts for single node server configuration
 
-    Release Tag of latest release: release-4.3
+    Release Tag of latest release: release-4.4
 
 ## Project structure:
 - README.md: General guidance for this repository. NSC3 installation, upgrade and maintenance instructions.
@@ -51,14 +51,14 @@ NSC3 backend installation guides and scripts for single node server configuratio
 ### Instructions for NSC3 add-on features:
 
 #### Team bridge:
-https://github.com/NSION/nsc3/blob/main/team-bridge.md
+https://github.com/Modirum-Platforms/nsc3/blob/main/team-bridge.md
 
 #### Valor AI module:
-https://github.com/NSION/nsc3/blob/main/valor-installation-guide.md
+https://github.com/Modirum-Platforms/nsc3/blob/main/valor-installation-guide.md
 
 #### NSC3 tooling:
 ##### NSC3 monitoring
-https://github.com/NSION/nsc3/blob/main/nsc3-monitoring/README.md
+https://github.com/Modirum-Platforms/nsc3/blob/main/nsc3-monitoring/README.md
 
 ### NSC3 installation:
 #### Install Docker:
@@ -183,7 +183,7 @@ Install docker-compose:
     sudo ./nsc3-install.sh --silent <Installation path> <SSL cert files location> <host name> <MAP region> <NSC3 release tag> <VALOR enabled true/false>
 
     CLI parameters example:
-    sudo ./nsc3-install.sh --silent /home/ubuntu/nsc3 /home/ubuntu foo.nsion.io NA release-3.15 false
+    sudo ./nsc3-install.sh --silent /home/ubuntu/nsc3 /home/ubuntu foo.modirumplatforms.io NA release-4.4 false
 
     Regional identifiers of MAP selection:
     EU=Europe, NA=North America, AUS=Australia, GCC=GCC states, false=skip maptiles downloading
@@ -202,9 +202,9 @@ sudo ./nsc3-install.sh
                                           
     ++++++++++++++++++++++++++++++++++++++++
     NSC3 installation folder, e.g /home/ubuntu/nsc3: /home/ubuntu/nsc3      
-    NSC3 public hostname, e.g foo.nsion.io: foo.nsion.io   
+    NSC3 public hostname, e.g foo.modirumplatforms.io: foo.modirumplatforms.io   
     Location of SSL cert files, e.g /home/ubuntu: /home/ubuntu
-    NSC3 Release tag, e.g release-3.15: release-3.11
+    NSC3 Release tag, e.g release: release-4.4
     Map files options : 
     1. North America map
     2. Europa map
@@ -216,7 +216,7 @@ sudo ./nsc3-install.sh
     ++++++++++++++++++++++++++++++++++++++++
     NSC3 backend is installed!
     Login to your NSC3 web app by URL address
-    https://foo.nsion.io
+    https://foo.modirumplatforms.io
     ++++++++++++++++++++++++++++++++++++++++
     
 ### Post installation steps
@@ -296,7 +296,7 @@ Start upgrade process:
     
 Note that release tag format is 
     
-    release-<release number>, e.g: release-3.15  
+    release-<release number>, e.g: release-4.4  
     
 ### NSC3 Maintenance
 
@@ -421,6 +421,33 @@ If still no access please then check ...
 - Disk space usage level
 - Docker status
 
+#### Files system is full - release disk spece in docker environment:
+
+Clean up container logs:
+
+	sudo find /var/lib/docker/containers/ -type f -name "*-json.log" -exec truncate -s 0 {} \;
+
+...alternatively you can use ```docker-log-tool.sh``` for docker logs analysis and cleaning
+
+Usage of ```docker-log-tool.sh``` script:
+
+	# Make it executable:
+	chmod +x docker-log-tool.sh
+
+	# Run to analyze log sizes:
+	./docker-log-tool.sh
+
+	# Run to clean all logs:
+	sudo ./docker-log-tool.sh --clean
+
+Clean up unused docker images:
+
+ 	docker image prune -a
+
+Clean up docker system:
+
+	docker system prune
+
 #### NSC3 Web service is not working properly:
 
 ##### Check that SSL cert is valid: Expected result if ok, "SSL certificate verify ok"
@@ -496,6 +523,83 @@ As example Ubuntu installation
 Test that route to 443 port is open:
 
     nmap <hostname> | grep 443
+
+# NSC3 Dignostics tools
+
+## NSC3 Network Diagnostics Toolkit
+
+This toolkit provides a simple, self-contained way to validate network connectivity
+from on-premise network segments to the SaaS platform.
+Two versions are included:
+- Linux diagnostics
+- Windows diagnostics
+
+Both versions run fully offline and produce a detailed log file.
+
+### 1. What the tool checks
+
+1. DNS resolution  
+2. HTTPS reachability (port 443)  
+3. TCP socket connectivity (ports 25204–25206)  
+4. Traceroute  
+
+A detailed report is written into the logs directory.
+
+### 2. Usage (Linux)
+
+- Download zip file from: [Linux dignostics tool](https://github.com/Modirum-Platforms/nsc3/raw/refs/heads/main/diagnostic-tools/linux-diagnostics/linux-diagnostics.zip)
+- Extract the zip package
+
+```
+linux/
+├── diagnose.sh
+├── README.md
+└── logs/
+```
+
+Run the script:
+
+```
+cd linux/
+chmod +x diagnose.sh  
+./diagnose.sh my-domain.com
+```
+
+### 3. Usage (Windows)
+
+- Download zip file from: [Windows dignostics tool](https://github.com/Modirum-Platforms/nsc3/raw/refs/heads/main/diagnostic-tools/windows-diagnostics/windows-diagnostics.zip)
+- Extract the zip package
+
+```
+windows/
+├── diagnose.ps1
+├── README.md
+└── logs/
+```
+
+Run the script:
+
+```
+cd windows
+powershell -ExecutionPolicy Bypass -File .\diagnose.ps1 my-domain.com
+```
+
+### 4. Output / Support
+
+Example output of the tool:
+
+```
+DNS: OK
+HTTPS 443: reachable
+Port 25204: OPEN
+Port 25205: BLOCKED
+Port 25206: OPEN
+Traceroute: reachable (12 hops)
+```
+
+Attach the generated diagnostic log when contacting support.
+
+
 
 ## NSC3 Container description:
 ![NSC3-containers](https://github.com/NSION/nsc3/blob/team-bridge-dev/NSC3-Valor-containers.png)

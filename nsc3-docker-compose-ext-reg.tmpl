@@ -928,6 +928,301 @@ volumes:
   minio-volume:
     name: minio-volume
 ### ReleaseTagEnd release-4.4
+### ReleaseTagStart release-4.3.2
+# This is for nsc3 version 4.1 and later
+version: "3"
+services:
+  main-postgres:
+    container_name: main-postgres
+    image: $NSC3REG/main-postgres:$NSC3REL
+    logging:
+      driver: "json-file"
+      options: {}
+    networks: 
+      - nsc-network
+    restart: unless-stopped
+    volumes:
+      - main-postgres-pg15-volume:/var/lib/postgresql/data:rw
+    working_dir: /root
+  user-postgres:
+    container_name: user-postgres
+    image: $NSC3REG/user-postgres:$NSC3REL
+    logging:
+      driver: "json-file"
+      options: {}
+    networks: 
+      - nsc-network
+    restart: unless-stopped
+    volumes:
+      - user-postgres-volume:/var/lib/postgresql/data:rw
+    working_dir: /root
+  bus-redis:
+    container_name: bus-redis
+    image: $NSC3REG/bus-redis:$NSC3REL
+    logging:
+      driver: "json-file"
+      options: {}
+    networks: 
+      - nsc-network
+    restart: unless-stopped
+    volumes:
+      - bus-redis-volume:/data:rw
+    working_dir: /root
+  nsc-scheduler-service:
+    container_name: nsc-scheduler-service
+    image: $NSC3REG/nsc-scheduler-service:$NSC3REL
+    environment:
+      - NSC3_SCHEDULER_SERVICE_VALOR_ENABLED=$VALOR_ENABLED
+    logging:
+      driver: "json-file"
+      options: {}
+    networks: 
+      - nsc-network
+    restart: unless-stopped
+  nsc-auth-service:
+    container_name: nsc-auth-service
+    image: $NSC3REG/nsc-auth-service:$NSC3REL
+    logging:
+      driver: "json-file"
+      options: {}
+    networks: 
+      - nsc-network
+    restart: unless-stopped
+    volumes:
+      - /dev/urandom:/dev/random:rw
+    working_dir: /root
+  nsc-stream-in-service:
+    container_name: nsc-stream-in-service
+    image: $NSC3REG/nsc-stream-in-service:$NSC3REL
+    logging:
+      driver: "json-file"
+      options: {}    
+    volumes:
+      - /dev/urandom:/dev/random:rw
+    networks: 
+      - nsc-network
+    restart: unless-stopped
+    environment:
+      - MEMORY=8g
+    working_dir: /root
+  nsc-live-service:
+    container_name: nsc-live-service
+    image: $NSC3REG/nsc-live-service:$NSC3REL
+    logging:
+      driver: "json-file"
+      options: {}
+    networks: 
+      - nsc-network
+    restart: unless-stopped
+    working_dir: /root
+  nsc-comms-service:
+    container_name: nsc-comms-service
+    image: $NSC3REG/nsc-comms-service:$NSC3REL
+    logging:
+      driver: "json-file"
+      options: {}
+    networks: 
+      - nsc-network
+    restart: unless-stopped
+    volumes:
+      - /dev/urandom:/dev/random:rw
+    working_dir: /root
+  nsc-playback-service:
+    container_name: nsc-playback-service
+    image: $NSC3REG/nsc-playback-service:$NSC3REL
+    logging:
+      driver: "json-file"
+      options: {}
+    networks: 
+      - nsc-network
+    restart: unless-stopped
+    working_dir: /root
+  nsc-network-stream-service:
+    container_name: nsc-network-stream-service
+    image: $NSC3REG/nsc-network-stream-service:$NSC3REL
+    ipc: private
+    cpus: 2.0
+    mem_limit: 4096M
+    logging:
+      driver: "json-file"
+      options: {}
+    networks: 
+      - nsc-network
+    restart: unless-stopped
+    working_dir: /root
+  nsc-aar-worker:
+    container_name: nsc-aar-worker
+    image: $NSC3REG/nsc-aar-worker:$NSC3REL
+    logging:
+      driver: "json-file"
+      options: {}
+    networks: 
+      - nsc-network
+    restart: unless-stopped
+  web-nginx:
+    container_name: web-nginx
+    image: $NSC3REG/web-nginx:$NSC3REL
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "20"
+        max-size: "100m"
+        mode: "non-blocking"
+    networks: 
+      - nsc-network
+    working_dir: /root
+    restart: unless-stopped
+  map-service:
+    container_name: map-service
+    image: $NSC3REG/map-service:$NSC3REL
+    logging:
+      driver: "json-file"
+      options: {}
+    networks: 
+      - nsc-network
+    restart: unless-stopped
+    volumes:
+      - $NSCHOME/mapdata:/data
+    command: ["-p", "8080", "-u", "https://$PUBLICIP/mapserver/"]
+    working_dir: /data
+  nsc-gateway:
+    container_name: nsc-gateway
+    image: $NSC3REG/nsc-gateway:$NSC3REL
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "20"
+        max-size: "100m"
+        mode: "non-blocking"
+    networks: 
+      - nsc-network
+    ports:
+      - "1935:1935/tcp"
+      - "1936:1936/tcp"
+      - "25204:25204/tcp"
+      - "25205:25205/tcp"
+      - "25206:25206/tcp"
+      - "443:443/tcp"
+      - "40000-40007:40000-40007/tcp"
+    restart: unless-stopped
+    volumes:
+      - $NSCHOME/nsc-gateway-cert:/mnt/cert 
+  nsc-minio:
+    container_name: nsc-minio
+    image: $NSC3REG/nsc-minio:$NSC3REL
+    logging:
+      driver: "json-file"
+      options: {}
+    networks: 
+      - nsc-network
+    restart: unless-stopped
+    volumes:
+      - minio-volume:/data:rw
+    command: ['server', '/data']
+  rtmp-server:
+    container_name: rtmp-server
+    environment:
+      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    image: $NSC3REG/rtmp-server:$NSC3REL
+    logging:
+      driver: "json-file"
+      options: {}
+    networks: 
+      - nsc-network
+    restart: unless-stopped
+  nsc-webrtc-proxy:
+    container_name: nsc-webrtc-proxy
+    environment:
+      - PROTOO_LISTEN_PORT=8080
+      - WEBSOCKET_LISTEN_PORT=8080
+      - MEDIASOUP_ANNOUNCED_IP=$EXTIP
+      - MEDIASOUP_MIN_PORT=40000
+      - MEDIASOUP_MAX_PORT=40007
+      - API_PROTOCOL=http://
+      - AUTH_API_ADDRESS=nsc-auth-service:8080
+      - COMMS_API_ADDRESS=nsc-comms-service:8080
+      - STREAM_IN_API_ADDRESS=nsc-stream-in-service:8080
+      - STATUS_PERIOD=180000
+      - MINIO_ENDPOINT=nsc-minio
+      - MINIO_PORT=9000
+      - MINIO_ACCESS_KEY=minioclient
+      - MINIO_SECRET_KEY=$MINIOSECRET
+      - REDIS_ENDPOINT=bus-redis
+      - REDIS_PORT=6379
+    image: $NSC3REG/nsc-webrtc-proxy:$NSC3REL
+    logging:
+      driver: "json-file"
+      options: {}
+    networks: 
+      - nsc-network
+    restart: unless-stopped  
+## add-on nsc-team-bridge-service-client-tcp
+#  nsc-team-bridge-service-client-tcp:
+#    image: $NSC3REG/nsc-team-bridge-service:$NSC3REL
+#    env_file:
+#      - nsc-team-bridge-service-client.env
+#    container_name: nsc-team-bridge-service-client-tcp
+#    networks: 
+#      - nsc-network
+#    restart: unless-stopped 
+#    volumes:
+#        - ./deploy-files/bridgekeys/:/opt/nsc3/bridgekeys
+## add-off nsc-team-bridge-service-client-tcp
+## add-on nsc-team-bridge-service-server-tcp
+#  nsc-team-bridge-service-server-tcp:
+#    image: $NSC3REG/nsc-team-bridge-service:$NSC3REL
+#    env_file:
+#      - nsc-team-bridge-service-server.env
+#    container_name: nsc-team-bridge-service-server-tcp
+#    networks: 
+#      - nsc-network
+#    restart: unless-stopped 
+#    ports:
+#      - "64660:64660/tcp"
+#    volumes:
+#      - ./deploy-files/bridgekeys/:/opt/nsc3/bridgekeys
+## add-off nsc-team-bridge-service-server-tcp
+## add-on nsc-team-bridge-service-client-udp
+#  nsc-team-bridge-service-client-udp:
+#    image: $NSC3REG/nsc-team-bridge-service:$NSC3REL
+#    env_file:
+#      - nsc-team-bridge-service-client.env
+#    container_name: nsc-team-bridge-service-client-udp
+#    networks: 
+#      - nsc-network
+#    restart: unless-stopped 
+## add-off nsc-team-bridge-service-client-udp
+## add-on nsc-team-bridge-service-server-udp
+#  nsc-team-bridge-service-server-udp:
+#    image: $NSC3REG/nsc-team-bridge-service:$NSC3REL
+#    env_file:
+#        - nsc-team-bridge-service-server.env
+#    container_name: nsc-team-bridge-service-server-udp
+#    networks: 
+#      - nsc-network
+#    restart: unless-stopped 
+#    ports:
+#      - "64660:64660/udp"
+## add-off nsc-team-bridge-service-server-udp
+networks:
+  nsc-network:
+    name: nsc-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.18.0.0/24"
+volumes:
+  main-postgres-pg15-volume:
+    name: main-postgres-pg15-volume
+    #external: true
+  user-postgres-volume:
+    name: user-postgres-volume   
+  bus-redis-volume:
+    name: bus-redis-volume
+  minio-volume:
+    name: minio-volume
+### ReleaseTagEnd release-4.3.2
 ### ReleaseTagStart release-4.3
 # This is for nsc3 version 4.1 and later
 version: "3"
