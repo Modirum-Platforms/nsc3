@@ -4,7 +4,7 @@ version: "3"
 services:
   main-postgres:
     container_name: main-postgres
-    image: $NSC3REG/main-postgres:$NSC3REL
+    image: $NSC3REG/dev/main-postgres:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -28,7 +28,7 @@ services:
     working_dir: /root
   bus-redis:
     container_name: bus-redis
-    image: $NSC3REG/bus-redis:$NSC3REL
+    image: $NSC3REG/dev/bus-redis:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -63,7 +63,7 @@ services:
     working_dir: /root
   nsc-stream-in-service:
     container_name: nsc-stream-in-service
-    image: $NSC3REG/nsc-stream-in-service:$NSC3REL
+    image: $NSC3REG/dev/nsc-stream-in-service:$NSC3REL
     logging:
       driver: "json-file"
       options: {}    
@@ -78,7 +78,7 @@ services:
     working_dir: /root
   nsc-stream-in-service-legacy:
     container_name: nsc-stream-in-service-legact
-    image: $NSC3REG/nsc-stream-in-service-legacy:$NSC3REL
+    image: $NSC3REG/dev/nsc-stream-in-service-legacy:$NSC3REL
     logging:
       driver: "json-file"
       options: {}    
@@ -92,7 +92,7 @@ services:
     working_dir: /root
   nsc-live-service:
     container_name: nsc-live-service
-    image: $NSC3REG/nsc-live-service:$NSC3REL
+    image: $NSC3REG/dev/nsc-live-service:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -102,7 +102,7 @@ services:
     working_dir: /root
   nsc-comms-service:
     container_name: nsc-comms-service
-    image: $NSC3REG/nsc-comms-service:$NSC3REL
+    image: $NSC3REG/dev/nsc-comms-service:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -114,7 +114,7 @@ services:
     working_dir: /root
   nsc-playback-service:
     container_name: nsc-playback-service
-    image: $NSC3REG/nsc-playback-service:$NSC3REL
+    image: $NSC3REG/dev/nsc-playback-service:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -124,7 +124,7 @@ services:
     working_dir: /root
   nsc-network-stream-service:
     container_name: nsc-network-stream-service
-    image: $NSC3REG/nsc-network-stream-service:$NSC3REL
+    image: $NSC3REG/dev/nsc-network-stream-service:$NSC3REL
     ipc: private
     cpus: 2.0
     mem_limit: 4096M
@@ -137,7 +137,7 @@ services:
     working_dir: /root
   nsc-aar-worker:
     container_name: nsc-aar-worker
-    image: $NSC3REG/nsc-aar-worker:$NSC3REL
+    image: $NSC3REG/dev/nsc-aar-worker:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -146,7 +146,7 @@ services:
     restart: unless-stopped
   web-nginx:
     container_name: web-nginx
-    image: $NSC3REG/web-nginx:$NSC3REL
+    image: $NSC3REG/dev/web-nginx:$NSC3REL
     logging:
       driver: "json-file"
       options:
@@ -159,7 +159,7 @@ services:
     restart: unless-stopped
   map-service:
     container_name: map-service
-    image: $NSC3REG/map-service:$NSC3REL
+    image: $NSC3REG/dev/map-service:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -172,7 +172,7 @@ services:
     working_dir: /data
   nsc-gateway:
     container_name: nsc-gateway
-    image: $NSC3REG/nsc-gateway:$NSC3REL
+    image: $NSC3REG/dev/nsc-gateway:$NSC3REL
     logging:
       driver: "json-file"
       options:
@@ -194,7 +194,7 @@ services:
       - $NSCHOME/nsc-gateway-cert:/mnt/cert 
   nsc-minio:
     container_name: nsc-minio
-    image: $NSC3REG/nsc-minio:$NSC3REL
+    image: $NSC3REG/dev/nsc-minio:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -208,7 +208,7 @@ services:
     container_name: rtmp-server
     environment:
       - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-    image: $NSC3REG/rtmp-server:$NSC3REL
+    image: $NSC3REG/dev/rtmp-server:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -234,7 +234,7 @@ services:
       - MINIO_SECRET_KEY=$MINIOSECRET
       - REDIS_ENDPOINT=bus-redis
       - REDIS_PORT=6379
-    image: $NSC3REG/nsc-webrtc-proxy:$NSC3REL
+    image: $NSC3REG/dev/nsc-webrtc-proxy:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -243,7 +243,7 @@ services:
     restart: unless-stopped  
 ## add-on nsc-team-bridge-service-client-tcp
 #  nsc-team-bridge-service-client-tcp:
-#    image: $NSC3REG/nsc-team-bridge-service:$NSC3REL
+#    image: $NSC3REG/dev/nsc-team-bridge-service:$NSC3REL
 #    env_file:
 #      - nsc-team-bridge-service-client.env
 #    container_name: nsc-team-bridge-service-client-tcp
@@ -255,7 +255,7 @@ services:
 ## add-off nsc-team-bridge-service-client-tcp
 ## add-on nsc-team-bridge-service-server-tcp
 #  nsc-team-bridge-service-server-tcp:
-#    image: $NSC3REG/nsc-team-bridge-service:$NSC3REL
+#    image: $NSC3REG/dev/nsc-team-bridge-service:$NSC3REL
 #    env_file:
 #      - nsc-team-bridge-service-server.env
 #    container_name: nsc-team-bridge-service-server-tcp
@@ -269,7 +269,7 @@ services:
 ## add-off nsc-team-bridge-service-server-tcp
 ## add-on nsc-team-bridge-service-client-udp
 #  nsc-team-bridge-service-client-udp:
-#    image: $NSC3REG/nsc-team-bridge-service:$NSC3REL
+#    image: $NSC3REG/dev/nsc-team-bridge-service:$NSC3REL
 #    env_file:
 #      - nsc-team-bridge-service-client.env
 #    container_name: nsc-team-bridge-service-client-udp
@@ -279,7 +279,7 @@ services:
 ## add-off nsc-team-bridge-service-client-udp
 ## add-on nsc-team-bridge-service-server-udp
 #  nsc-team-bridge-service-server-udp:
-#    image: $NSC3REG/nsc-team-bridge-service:$NSC3REL
+#    image: $NSC3REG/dev/nsc-team-bridge-service:$NSC3REL
 #    env_file:
 #      - nsc-team-bridge-service-server.env
 #    container_name: nsc-team-bridge-service-server-udp

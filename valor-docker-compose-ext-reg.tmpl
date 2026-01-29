@@ -4,7 +4,7 @@ version: "2.3"
 services:
   valor-postgres:
     container_name: valor-postgres
-    image: $NSC3REG/valor-postgres:$NSC3REL
+    image: $NSC3REG/dev/valor-postgres:$NSC3REL
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -12,7 +12,7 @@ services:
         - valor-postgres-volume-15:/var/lib/postgresql/data:rw
   nsc-valor-bus:
     container_name: nsc-valor-bus
-    image: $NSC3REG/nsc-valor-bus:$NSC3REL
+    image: $NSC3REG/dev/nsc-valor-bus:$NSC3REL
     runtime: nvidia
     networks: 
       - nsc-network
@@ -23,7 +23,7 @@ services:
         - nsc-valor-bus-volume:/data:rw
   nsc-valor-tasker-service:
     container_name: nsc-valor-tasker-service
-    image: $NSC3REG/nsc-valor-tasker-service:$NSC3REL
+    image: $NSC3REG/dev/nsc-valor-tasker-service:$NSC3REL
     environment:
         - MEMORY="8g"
     networks: 
