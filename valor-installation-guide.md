@@ -17,12 +17,11 @@ Detailed installation guidance for Ubuntu 20.04 LTS and 22.02 LTS
 - [x] Linux operating system, Ubuntu 20.04/22.02 LTS as reference. Following instructions regarding NVIDIA drivers installation are compatible only with Ubuntu 20.04/22.04 LTS.
 - [x] The computer or virtual machine is allocated for NSC3 use only.
 - [x] Internet access is available
-- [x] NSC3 backend is installed and Docker is attached to NSION container registry
+- [x] NSC3 backend is installed and Docker is attached to Modirum Platforms container registry
 - [x] Valor specific NSC3 license is required 
 
-NSC3 technical description: https://www.nsiontec.com/technical-specifications/
 
-## NSC3 backend installation guidance for single node via public NSION repository:
+## NSC3 backend installation guidance for single node via public Modirum Platforms repository:
 ### Default file system locations:
 
 - NSC3-Valor Installation folder $HOME/nsc3, However this location is configurable. Instruction are referring for $HOME/nsc3 folder. 
@@ -220,7 +219,7 @@ Expected output (as example):
     ++++++++++++++++++++++++++++++++++++++++
     Valor backend is installed!
     Login to your NSC3 web app by URL address
-    https://foo.nsion.io
+    https://foo.modirumplatforms.com
     ++++++++++++++++++++++++++++++++++++++++
     
 #### Initialize the Valor database

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Variables to configure per server
 MINIOPATHDIR="/var/lib/docker/volumes/minio-volume/_data"
-HOSTNAME="usa.nsiontec.com"
+HOSTNAME="example.com"
 OUTPUTLOCATION="/home/ubuntu/nsc3/logs"
 # fixed variables
 DATE=`date +%Y%m%d`   

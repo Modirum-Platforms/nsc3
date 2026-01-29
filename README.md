@@ -250,9 +250,6 @@ Login to the NSC3 web app as admin
 - Modirum Platforms will prepare and return a corresponding license key file back. No need to left UI open while waiting
 - Insert license key via NSC3 admin/license UI. Licenses Tab / Server license / Set new NSC3 license / Insert license key (download from local computer via Web app)
 
-#### Configure NSC organisation
-
-NSC3 Admin documentation: https://www.nsiontec.com/user-guide-webapp-admin/ 
 
 ### Upgrade NSC3
 
@@ -602,4 +599,4 @@ Attach the generated diagnostic log when contacting support.
 
 
 ## NSC3 Container description:
-![NSC3-containers](https://github.com/NSION/nsc3/blob/team-bridge-dev/NSC3-Valor-containers.png)
+![NSC3-containers](https://github.com/modirumplatforms/nsc3/blob/main/NSC3-Valor-containers.png)
