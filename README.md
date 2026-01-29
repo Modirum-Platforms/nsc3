@@ -136,7 +136,7 @@ If you don't have access to the internet on the machine that NSC3 will be instal
 Via Docker registry:
 
     cd $HOME/nsc3
-    sudo docker login registrynsion.azurecr.io
+    sudo docker login modirumplatforms.azurecr.io
     
     <Registry crentials will be delivered separately>
 

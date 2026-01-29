@@ -364,7 +364,7 @@ Release 3.15 as example
 1. Loading image
 
 ```
-sudo docker pull registrynsion.azurecr.io/nsc-recipe-face-comparison-service:release-3.15
+sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-face-comparison-service:release-3.15
 ```
 Note the tag that image gets when loaded
 
@@ -378,7 +378,7 @@ Note the tag that image gets when loaded
     - Use the tag that image got when loaded; here as an example :release-3.15 . Use actual path in volume mount parameter (-v)
 
 ```
-sudo docker run -d -v /home/exampleuser/demodata/faces:/data/wanted_faces --net nsc-network --restart unless-stopped --name nsc-recipe-face-comparison-service registry.menturagroup.com/nsc3/docker-images/nsc-recipe-face-comparison-service:release-3.15
+sudo docker run -d -v /home/exampleuser/demodata/faces:/data/wanted_faces --net nsc-network --restart unless-stopped --name nsc-recipe-face-comparison-service modirumplatforms.azurecr.io/nsc-recipe-face-comparison-service:release-3.15
 ```
 
 #### Object detection
@@ -386,11 +386,11 @@ sudo docker run -d -v /home/exampleuser/demodata/faces:/data/wanted_faces --net 
 1. Loading images
 
 ```
-sudo docker pull registrynsion.azurecr.io/nsc-recipe-object-detection-service:release-3.15
+sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-object-detection-service:release-3.15
 ```
 
 ```
-sudo docker pull registrynsion.azurecr.io/nsc-recipe-object-detection-service-onnx:release-3.15
+sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-object-detection-service-onnx:release-3.15
 ```		
 
 Note the tags that images get when loaded.
@@ -399,10 +399,10 @@ Note the tags that images get when loaded.
 Use the tag that images got when loaded; here as an example :release-3.15
 
 ```
-sudo docker run -d --net nsc-network -e "NVIDIA_VISIBLE_DEVICES=all" -e "NVIDIA_DRIVER_CAPABILITIES=all" --runtime=nvidia --restart unless-stopped --name nsc-recipe-object-detection-service-onnx registry.menturagroup.com/nsc3/docker-images/nsc-recipe-object-detection-service-onnx:release-3.15
+sudo docker run -d --net nsc-network -e "NVIDIA_VISIBLE_DEVICES=all" -e "NVIDIA_DRIVER_CAPABILITIES=all" --runtime=nvidia --restart unless-stopped --name nsc-recipe-object-detection-service-onnx modirumplatforms.azurecr.io/nsc-recipe-object-detection-service-onnx:release-3.15
 ```
 
 ```
-sudo docker run -d --net nsc-network --restart unless-stopped --name nsc-recipe-object-detection-service registry.menturagroup.com/nsc3/docker-images/nsc-recipe-object-detection-service:release-3.15
+sudo docker run -d --net nsc-network --restart unless-stopped --name nsc-recipe-object-detection-service modirumplatforms.azurecr.io/nsc-recipe-object-detection-service:release-3.15
 ```
 
