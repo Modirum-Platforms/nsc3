@@ -77,7 +77,7 @@ echo "Downloading docker images ..."
 sudo docker-compose -f docker-compose-valor.yml up -d
 echo "*********************************************************"
 echo ""                                        
-echo "NSC3 backend with Valor release $RELEASETAG is installed!"
+echo "NSC3 backend with Valor version $NSC3REL is installed!"
 echo ""
 echo "Login to your NSC3 web app by URL address"
 echo "https://$PUBLICIP"

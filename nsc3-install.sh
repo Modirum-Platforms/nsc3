@@ -249,7 +249,7 @@ sleep 2
 echo ""
 echo "*******************************************************"
 echo ""                                        
-echo "   NSC3 backend release $RELEASETAG is installed!  "
+echo "   NSC3 backend version $NSC3REL is installed!  "
 echo ""
 echo "   Login to your NSC3 web app by URL address       "
 echo "   https://$PUBLICIP                               "

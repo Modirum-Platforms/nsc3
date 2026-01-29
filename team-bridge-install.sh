@@ -353,7 +353,7 @@ sudo docker-compose up -d
 echo ""
 echo "************************************************************************"
 echo "                                                       "                                        
-echo "NSC3 backend release $RELEASETAG is installed with  "
+echo "NSC3 backend version $NSC3REL is installed with  "
 echo "Team-Bridge role: $TBROLE using $TBMODE protocol    "
 if [ $TBROLE = client ]; then echo "Source org ID: $SOURCEORG ServerIP: $TBSERVERIP "; fi
 if [ $TBROLE = server ]; then echo "Source org ID: $SOURCEORG Target org ID: $TARGETORG "; fi
