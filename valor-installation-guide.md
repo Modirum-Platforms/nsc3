@@ -3,7 +3,7 @@
 Valor installation guidance and scripts for single node server configuration.
 Detailed installation guidance for Ubuntu 20.04 LTS and 22.02 LTS
 
-    Release Tag: release-3.15
+    Release Tag: release-4.4.2
 
 ## Project structure:
 
@@ -199,7 +199,7 @@ Expected output (as example):
     sudo ./valor-install.sh --silent <NSC3 release tag>
 
     CLI parameters example:
-    sudo ./valor-install.sh --silent release-3.15
+    sudo ./valor-install.sh --silent release-4.4.2
     +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -215,7 +215,7 @@ Expected output (as example):
       This script prepares Valor config     
 
     ++++++++++++++++++++++++++++++++++++++++
-    Valor Release tag, e.g release-3.15: 
+    Valor Release tag, e.g release-4.4.2: 
     latest  
     ++++++++++++++++++++++++++++++++++++++++
     Valor backend is installed!
@@ -268,7 +268,7 @@ Start upgrade process:
     
 Note that release tag format is 
     
-    release-<release number>, e.g: release-3.15
+    release-<release number>, e.g: release-4.4.2
     
 ### Valor maintenance
 
@@ -359,12 +359,12 @@ Example printout:
 ### Valor add-ons
 
 #### Face comparison
-Release 3.15 as example
+Release 4.4.2 as example
 
 1. Loading image
 
 ```
-sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-face-comparison-service:release-3.15
+sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-face-comparison-service:release-4.4.2
 ```
 Note the tag that image gets when loaded
 
@@ -375,10 +375,10 @@ Note the tag that image gets when loaded
     - Put face samples here as jpg-files. Note that filenames will be used as detection names
 
 3. Running container
-    - Use the tag that image got when loaded; here as an example :release-3.15 . Use actual path in volume mount parameter (-v)
+    - Use the tag that image got when loaded; here as an example :release-4.4.2 . Use actual path in volume mount parameter (-v)
 
 ```
-sudo docker run -d -v /home/exampleuser/demodata/faces:/data/wanted_faces --net nsc-network --restart unless-stopped --name nsc-recipe-face-comparison-service modirumplatforms.azurecr.io/nsc-recipe-face-comparison-service:release-3.15
+sudo docker run -d -v /home/exampleuser/demodata/faces:/data/wanted_faces --net nsc-network --restart unless-stopped --name nsc-recipe-face-comparison-service modirumplatforms.azurecr.io/nsc-recipe-face-comparison-service:release-4.4.2
 ```
 
 #### Object detection
@@ -386,23 +386,23 @@ sudo docker run -d -v /home/exampleuser/demodata/faces:/data/wanted_faces --net 
 1. Loading images
 
 ```
-sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-object-detection-service:release-3.15
+sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-object-detection-service:release-4.4.2
 ```
 
 ```
-sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-object-detection-service-onnx:release-3.15
+sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-object-detection-service-onnx:release-4.4.2
 ```		
 
 Note the tags that images get when loaded.
 
 2. Running containers
-Use the tag that images got when loaded; here as an example :release-3.15
+Use the tag that images got when loaded; here as an example :release-4.4.2
 
 ```
-sudo docker run -d --net nsc-network -e "NVIDIA_VISIBLE_DEVICES=all" -e "NVIDIA_DRIVER_CAPABILITIES=all" --runtime=nvidia --restart unless-stopped --name nsc-recipe-object-detection-service-onnx modirumplatforms.azurecr.io/nsc-recipe-object-detection-service-onnx:release-3.15
+sudo docker run -d --net nsc-network -e "NVIDIA_VISIBLE_DEVICES=all" -e "NVIDIA_DRIVER_CAPABILITIES=all" --runtime=nvidia --restart unless-stopped --name nsc-recipe-object-detection-service-onnx modirumplatforms.azurecr.io/nsc-recipe-object-detection-service-onnx:release-4.4.2
 ```
 
 ```
-sudo docker run -d --net nsc-network --restart unless-stopped --name nsc-recipe-object-detection-service modirumplatforms.azurecr.io/nsc-recipe-object-detection-service:release-3.15
+sudo docker run -d --net nsc-network --restart unless-stopped --name nsc-recipe-object-detection-service modirumplatforms.azurecr.io/nsc-recipe-object-detection-service:release-4.4.2
 ```
 

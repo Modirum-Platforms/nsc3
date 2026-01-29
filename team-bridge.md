@@ -1,6 +1,6 @@
 # NSC3 Team-Bridge Service
 
-Release tag: `release-3.15`
+Release tag: `release-4.4.2`
 
 ## Team-Bridge Service description:
 

@@ -21,7 +21,7 @@ if [ ${1+"true"} ]; then
        echo "./valor-upgrade.sh --silent <NSC3 release tag>"
        echo ""
        echo "CLI parameters example:"
-       echo "./valor-upgrade.sh --silent release-3.15"
+       echo "./valor-upgrade.sh --silent release-4.4.2"
        echo ""
        echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
        exit 0
@@ -38,7 +38,7 @@ if [ "$silentmode" = false ]; then
     echo "  This script is upgrading NSC3 system  "
     echo "                                        "
     echo "++++++++++++++++++++++++++++++++++++++++"
-    echo "New NSC3 Release tag for upgrading, e.g release-3.15: " 
+    echo "New NSC3 Release tag for upgrading, e.g release-4.4.2: " 
     read REL
     export NSC3REL=$REL
 fi
