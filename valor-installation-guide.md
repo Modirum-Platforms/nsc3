@@ -17,7 +17,7 @@ Detailed installation guidance for Ubuntu 20.04 LTS and 22.02 LTS
 - [x] Linux operating system, Ubuntu 20.04/22.02 LTS as reference. Following instructions regarding NVIDIA drivers installation are compatible only with Ubuntu 20.04/22.04 LTS.
 - [x] The computer or virtual machine is allocated for NSC3 use only.
 - [x] Internet access is available
-- [x] NSC3 backend is installed and Docker is attached to Modirum Platforms container registry
+- [x] NSC3 backend is installed
 - [x] Valor specific NSC3 license is required 
 
 
@@ -32,7 +32,7 @@ Detailed installation guidance for Ubuntu 20.04 LTS and 22.02 LTS
 ## Install GPU drivers to host VM
 
 19.10.2023 Note: It is recommeded to install Ubuntu 20.04 based image for Cloud VM due to limitations with NVIDIA latest drivers.
-01.07.2024 Note: In case of Azure VM Please add then NVIDIA extension. https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/hpccompute-gpu-linux?source=recommendations. 
+01.07.2024 Note: In case of Azure VM Please add the NVIDIA extension. https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/hpccompute-gpu-linux?source=recommendations. 
 
 Ubuntu 20.04/22.04 LTS as reference:
 
@@ -176,13 +176,48 @@ Expected output (as example):
 
 
 ## Valor installation:    
-### Download latest version of Valor installation scripts:
+
+#### Gather installation scripts from Modirum Platforms Github:
+With access to the internet:
+
+    cd $HOME
+    git clone https://github.com/Modirum-Platforms/nsc3.git
+
+If you don't have access to the internet on the machine that NSC3 will be installed:
+- Download a ZIP of the Github repository via this link https://github.com/Modirum-Platforms/nsc3/archive/refs/heads/main.zip
+- Move the ZIP to the NSC3 machine's $HOME folder
+- Run the following commands:
+
+```
+    cd $HOME
+    mkdir $HOME/nsc3
+    unzip nsc3-main.zip -d $HOME/nsc3
+```
+
+#### Grant execute rights for the installation script:
 
     cd $HOME/nsc3
-    chmod u-x *.sh
-    git pull
-    chmod u+x *.sh
+    chmod u+x valor-install.sh
+
+#### Gaining access to the docker images:
+
+Via Docker registry:
+
+    cd $HOME/nsc3
+    sudo docker login modirumplatforms.azurecr.io
     
+    <Registry crentials will be delivered separately>
+
+Via delivered tar file:
+- Move the delivered tar file to the NSC3 machine's $HOME folder
+- Load the images:
+
+```
+    cd $HOME
+    tar -xvf export_release-valor_<YOUR_RELEASE_NUMBER_HERE>.tar.xz
+    cd $HOME/export
+    ls -1 *.tar | xargs --no-run-if-empty -L 1 docker load -i
+```
 
 ### Install Valor
 #### Silent installation mode: 
@@ -249,13 +284,35 @@ Check SSL Certification status, Expected result when ok, "SSL certificate verify
     curl --cert-status -v https://$PUBLICIP 2>&1 | awk 'BEGIN { cert=0 } /^\* Server certificate:/ { cert=1 } /^\*/ { if (cert) print }'
     
 
-### Upgrade NSC3
+### Upgrade Valor
 
-Downlaod the latest scripts from github:
+With internet access:
 
     cd $HOME/nsc3
     chmod u-x *.sh
     git pull -f
+
+Without internet access:
+- Download a ZIP of the Github repository via this link https://github.com/Modirum-Platforms/nsc3/archive/refs/heads/main.zip
+- Move the ZIP to the NSC3 machine's $HOME folder
+- Run the following commands:
+
+```
+    cd $HOME
+    mkdir $HOME/nsc3
+    unzip -o nsc3-main.zip -d $HOME/nsc3
+```
+
+If images were loaded from the delivered tar file, you will be delivered a new tar file with updated images:
+- Move the delivered tar file to the NSC3 machine's $HOME folder
+- Load the images:
+
+```
+    cd $HOME
+    tar -xvf export_release-valor_<YOUR_RELEASE_NUMBER_HERE>.tar.xz
+    cd $HOME/export
+    ls -1 *.tar | xargs --no-run-if-empty -L 1 docker load -i
+```
     
 Grant execute rights for the upgrade script:
 
@@ -362,9 +419,20 @@ Release 4.4.2 as example
 
 1. Loading image
 
+Via the container registry:
 ```
 sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-face-comparison-service:release-4.4.2
 ```
+
+Via delivered tar file:
+- Move the delivered tar file to the NSC3 machine's $HOME folder
+- Load the images:
+
+```
+    cd $HOME
+    docker load -i <PROVIDED_FACE_COMPARISON_TAR_FILE>
+```
+
 Note the tag that image gets when loaded
 
 2. Make a directory for face samples
@@ -384,13 +452,24 @@ sudo docker run -d -v /home/exampleuser/demodata/faces:/data/wanted_faces --net 
 
 1. Loading images
 
+Via the container registry:
 ```
 sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-object-detection-service:release-4.4.2
 ```
 
 ```
 sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-object-detection-service-onnx:release-4.4.2
-```		
+```	
+
+Via delivered tar files:
+- Move the delivered tar files to the NSC3 machine's $HOME folder
+- Load the images:
+
+```
+    cd $HOME
+    docker load -i <PROVIDED_OBJECT_DETECTION_TAR_FILE>
+    docker load -i <PROVIDED_OBJECT_DETECTION_ONNX_TAR_FILE>
+```
 
 Note the tags that images get when loaded.
 
