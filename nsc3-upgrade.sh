@@ -1,11 +1,11 @@
 #!/bin/bash
 ## NSC3 registry:
-export NSC3REG="registry.menturagroup.com/nsc3/docker-images"
+export NSC3REG="modirumplatforms.azurecr.io"
 export DOCKERCOMPOSECOMMAND="docker-compose"
 TIMESTAMP=$(date +%Y%m%d%H%M)
 source ./nsc-host.env
 chmod u+x *.sh
-PREVRELEASE=$(cat $NSCHOME/docker-compose.yml | grep registry.menturagroup.com/nsc3/docker-images/main-postgres: | cut -d\: -f3) 2> /dev/null
+PREVRELEASE=$(cat $NSCHOME/docker-compose.yml | grep modirumplatforms.azurecr.io/main-postgres: | cut -d\: -f3) 2> /dev/null
 export EXTIP=$(host $PUBLICIP | awk '{print $4}') 2> /dev/null
 export MINIOSECRET=$(sudo docker inspect nsc-minio | grep MINIO_ROOT_PASSWORD= | awk '{print $1}' | sed s/MINIO_ROOT_PASSWORD=// | sed -e 's/[""]//g') 2> /dev/null
 silentmode=false
@@ -32,7 +32,7 @@ if [ ${1+"true"} ]; then
        echo "sudo ./nsc3-upgrade.sh --silent <NSC3 release tag>"
        echo ""
        echo "CLI parameters example:"
-       echo "sudo ./nsc3-upgrade.sh --silent release-3.15"
+       echo "sudo ./nsc3-upgrade.sh --silent release-4.4.2"
        echo ""
        echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
        exit 0
@@ -50,7 +50,7 @@ if [ "$silentmode" = false ]; then
     echo "  Current release tag: $PREVRELEASE  "    
     echo "                                        "
     echo "++++++++++++++++++++++++++++++++++++++++"
-    read -p "NSC3 Release tag for upgrading, e.g release-3.15: " NSC3REL
+    read -p "NSC3 Release tag for upgrading, e.g release-4.4.2: " NSC3REL
 fi
 cd $NSCHOME
 # Check values

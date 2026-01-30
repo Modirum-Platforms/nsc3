@@ -1,6 +1,6 @@
 # NSC3 Team-Bridge Service
 
-Release tag: `release-3.15`
+Release tag: `release-4.4.2`
 
 ## Team-Bridge Service description:
 
@@ -37,7 +37,7 @@ Pre-requisites for installation:
 
 ### Reference dataflow with example values.
 
-![One-Directional-link](https://github.com/NSION/nsc3/blob/team-bridge-dev/One-directional-TB-link.png)
+![One-Directional-link](https://github.com/modirum-platforms/nsc3/blob/main/One-directional-TB-link.png)
 
 ### Team-Bridge One-Directional link - Client:
 
@@ -101,7 +101,7 @@ Local target organisation ID: kqkYDd2Ofv04eFBg-G7xmPIO9IjGMcx_VcEJ
 
 ### Reference dataflow with example values.
 
-![Bi-Directional-link](https://github.com/NSION/nsc3/blob/team-bridge-dev/Bi-directional-TB-link.png)
+![Bi-Directional-link](https://github.com/modirum-platforms/nsc3/blob/main/Bi-directional-TB-link.png)
 
 ### Team-Bridge Bi-Directional link - Server1:
 

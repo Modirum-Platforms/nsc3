@@ -1,6 +1,6 @@
 #!/bin/bash
 ## NSC3 registry:
-export NSC3REG="registry.menturagroup.com/nsc3/docker-images"
+export NSC3REG="modirumplatforms.azurecr.io"
 export REDISAI_DEVICE="gpu"
 flag=false
 if [ ${1+"true"} ]; then

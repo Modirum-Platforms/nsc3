@@ -21,7 +21,7 @@ Object storage status check tool for min.io specific object storage setup
 #### Configure to script the enviroment specific parameters
 
 	MINIOPATHDIR="/var/lib/docker/volumes/minio-volume/_data"
-	HOSTNAME="usa.nsiontec.com"
+	HOSTNAME="example.com"
 	OUTPUTLOCATION="/home/ubuntu/nsc3/logs"
     
 #### Set execute permissions for the file
@@ -38,7 +38,7 @@ Object storage status check tool for min.io specific object storage setup
 ### Results as example:
 
 	'DATE','HOSTNAME','ORGNAME','TOTAL SIZE','TOTAL COUNTS','OLDEST TIMESTAMP','BUCKETID'
-	'20220109','usa.nsiontec.com','vansomerten','272K','20220109','ie3z0vjt5ju3m0iog0h8f1ovnopsv9jlqpk'
+	'20220109','example.com','vansomerten','272K','20220109','ie3z0vjt5ju3m0iog0h8f1ovnopsv9jlqpk'
 
 
 ### Add the script to crontab
@@ -81,7 +81,7 @@ Output in csv format
 
 	MINIOPATHDIR="/var/lib/docker/volumes/minio-volume/_data"
 	DOCKERPATHDIR="/var/lib/docker"
-	HOSTNAME="usa.nsiontec.com"
+	HOSTNAME="example.com"
 	NSC3LOGS="/home/ubuntu/logs"
 	OUTPUTLOCATION="/home/ubuntu/logs"
 
@@ -99,7 +99,7 @@ Output in csv format
 ### Results as example:
 
 	'DATE','HOSTNAME','CPUUSAGEFREE','MEMUSAGEFREE','DISKUSAGELEVEL','STORAGESIZE','OBJECTSTORAGESIZE','CONTAINERSIZE','NSCLOGS','CERTEXP','HTTPSTATUS'
-    '20220109','usa.nsiontec.com','91.47%','2GB;14%','1.5T','165G','9.1GB','124M','2022-Sep-4','200'
+    '20220109','example.com','91.47%','2GB;14%','1.5T','165G','9.1GB','124M','2022-Sep-4','200'
     
 ### Add the script to crontab
 Cronjob syntax:
@@ -134,7 +134,7 @@ Toolset for performance measuring purposes
     
     ---- example
     OUTPUTLOCATION="/home/ubuntu/nsc3/logs"
-	HOSTNAME="perflandia.nsion.io"
+	HOSTNAME="example.com"
     ---- example
     
 #### Run script: 

@@ -5,7 +5,7 @@
 # Variables to configure per server
 MINIOPATHDIR="/var/lib/docker/volumes/minio-volume/_data"
 DOCKERPATHDIR="/var/lib/docker"
-HOSTNAME="usa.nsiontec.com"
+HOSTNAME="example.com"
 NSC3LOGS="/home/ubuntu/logs"
 OUTPUTLOCATION="/home/ubuntu/logs"
 #fixed values

@@ -2,7 +2,9 @@
 ## Project description:
 NSC3 backend installation guides and scripts for single node server configuration
 
-    Release Tag of latest release: release-4.4
+    Release Tag of latest release: release-4.4.2
+
+NOTE: All the instructions are for release-4.4.2 and later. If there is a need to install an older version plese reach out to Modirum Platforms
 
 ## Project structure:
 - README.md: General guidance for this repository. NSC3 installation, upgrade and maintenance instructions.
@@ -32,7 +34,8 @@ NSC3 backend installation guides and scripts for single node server configuratio
 - [x] SSL certifications for the service domain. Human readable (PEM) format. A private key file named as privkey.pem. A full chained certification file named as fullchain.pem
 - [x] Server domain name is registered to DNS services. 
 - [x] Linux account with sudo privileges for operating system.
-- [x] Following 3rd party apps are needed: git, wget and curl. Most of them are by default included as part of a linux basic setup. However please ensure beforehand availability on your local linux setup. 
+- [x] Access account to Modirum Platforms container registry or tar package with the Docker images is provided to you.
+- [x] Following 3rd party apps are needed for installations were internet is used: git, wget and curl. Most of them are by default included as part of a linux basic setup. However please ensure beforehand availability on your local linux setup. 
 
 
 ## NSC3 backend installation guidance for single node:
@@ -96,7 +99,26 @@ sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 ```
 
+#### In case Docker was already installed beforehand, make sure you have the right docker compose:
+
+Please follow the latest installation instructions by Docker community https://docs.docker.com/compose/install/.
+As an example, installation for Ubuntu with access to the internet:
+
+Remove old docker-compose:
+
+    sudo apt-get remove docker-compose
+    
+Install docker compose:
+
+	VERSION=$(curl --silent https://api.github.com/repos/docker/compose/releases/latest | grep -Po '"tag_name": "\K.*\d')
+
+    DESTINATION=/usr/local/bin/docker-compose
+    sudo curl -L https://github.com/docker/compose/releases/download/${VERSION}/docker-compose-$(uname -s)-$(uname -m) -o $DESTINATION
+    sudo chmod 755 $DESTINATION
+
+
 #### Install git:
+- Git needs to only be installed if doing an installation with access to the internet
 
 - Please follow the latest installation instructions by Git community https://git-scm.com/download/linux
 
@@ -107,9 +129,8 @@ sudo apt install git
 #### Setup installation folder:
 
 - Copy the SSL cert files privkey.pem and fullchain.pem to your home folder. As this example $HOME 
-- Clone git project from Modirum Platforms NSC3 repository
 
-#### Gather installation scripts from Modirum Platforms github:
+#### Gather installation scripts from Modirum Platforms Github:
 With access to the internet:
 
     cd $HOME
@@ -136,7 +157,7 @@ If you don't have access to the internet on the machine that NSC3 will be instal
 Via Docker registry:
 
     cd $HOME/nsc3
-    sudo docker login registrynsion.azurecr.io
+    sudo docker login modirumplatforms.azurecr.io
     
     <Registry crentials will be delivered separately>
 
@@ -150,24 +171,6 @@ Via delivered tar file:
     cd $HOME/export
     ls -1 *.tar | xargs --no-run-if-empty -L 1 docker load -i
 ```
-        
-#### Install Docker Compose:
-
-Please follow the latest installation instructions by Docker community https://docs.docker.com/compose/install/.
-As an example, installation for Ubuntu with access to the internet:
-
-Remove old docker-compose:
-
-    sudo apt-get remove docker-compose
-    
-Install docker-compose:
-
-	VERSION=$(curl --silent https://api.github.com/repos/docker/compose/releases/latest | grep -Po '"tag_name": "\K.*\d')
-
-    DESTINATION=/usr/local/bin/docker-compose
-    sudo curl -L https://github.com/docker/compose/releases/download/${VERSION}/docker-compose-$(uname -s)-$(uname -m) -o $DESTINATION
-    sudo chmod 755 $DESTINATION
-
 
 #### Install NSC3
 ##### Silent installation mode: 
@@ -183,7 +186,7 @@ Install docker-compose:
     sudo ./nsc3-install.sh --silent <Installation path> <SSL cert files location> <host name> <MAP region> <NSC3 release tag> <VALOR enabled true/false>
 
     CLI parameters example:
-    sudo ./nsc3-install.sh --silent /home/ubuntu/nsc3 /home/ubuntu foo.modirumplatforms.io NA release-4.4 false
+    sudo ./nsc3-install.sh --silent /home/ubuntu/nsc3 /home/ubuntu foo.modirumplatforms.com NA release-4.4 false
 
     Regional identifiers of MAP selection:
     EU=Europe, NA=North America, AUS=Australia, GCC=GCC states, false=skip maptiles downloading
@@ -202,7 +205,7 @@ sudo ./nsc3-install.sh
                                           
     ++++++++++++++++++++++++++++++++++++++++
     NSC3 installation folder, e.g /home/ubuntu/nsc3: /home/ubuntu/nsc3      
-    NSC3 public hostname, e.g foo.modirumplatforms.io: foo.modirumplatforms.io   
+    NSC3 public hostname, e.g foo.modirumplatforms.com: foo.modirumplatforms.com   
     Location of SSL cert files, e.g /home/ubuntu: /home/ubuntu
     NSC3 Release tag, e.g release: release-4.4
     Map files options : 
@@ -216,14 +219,14 @@ sudo ./nsc3-install.sh
     ++++++++++++++++++++++++++++++++++++++++
     NSC3 backend is installed!
     Login to your NSC3 web app by URL address
-    https://foo.modirumplatforms.io
+    https://foo.modirumplatforms.com
     ++++++++++++++++++++++++++++++++++++++++
     
 ### Post installation steps
 
 - [x] Verify installation
 - [x] Insert NSC3 license
-- [x] Configure NSC3 organisation
+- [x] Configure NSC3 organization
 
 #### Verify installation
 Check docker containers, Totally number of running containers is 16 without optional features
@@ -250,13 +253,19 @@ Login to the NSC3 web app as admin
 - Modirum Platforms will prepare and return a corresponding license key file back. No need to left UI open while waiting
 - Insert license key via NSC3 admin/license UI. Licenses Tab / Server license / Set new NSC3 license / Insert license key (download from local computer via Web app)
 
-#### Configure NSC organisation
+#### Configure NSC3 organization
 
-NSC3 Admin documentation: https://www.nsiontec.com/user-guide-webapp-admin/ 
+- Go to the Organizations tab and click Create organization
+- Fill in all the information and click Create
+- Fill in the organization license details and click Confirm
+- Click the user icon in the organization box 
+- Click add user and fill in information and set the role to Keyuser and click Add user
+- The user has now been added to the organization and can log in and manage the specific organization
+
 
 ### Upgrade NSC3
 
-Download the latest scripts from github:
+Download the latest scripts from Github:
 
 With internet access:
 
@@ -602,4 +611,4 @@ Attach the generated diagnostic log when contacting support.
 
 
 ## NSC3 Container description:
-![NSC3-containers](https://github.com/NSION/nsc3/blob/team-bridge-dev/NSC3-Valor-containers.png)
+![NSC3-containers](https://github.com/modirum-platforms/nsc3/blob/main/NSC3-Valor-containers.png)

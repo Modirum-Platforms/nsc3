@@ -1,6 +1,6 @@
 #!/bin/bash
 ## NSC3 registry:
-export NSC3REG="registry.menturagroup.com/nsc3/docker-images"
+export NSC3REG="modirumplatforms.azurecr.io"
 export REDISAI_DEVICE="gpu"
 source ./nsc-host.env
 silentmode=false
@@ -22,9 +22,9 @@ if [ ${1+"true"} ]; then
        echo "sudo ./valor-install.sh --silent <Valor release tag> <HW layout>"
        echo ""
        echo "CLI parameters example:"
-       echo "sudo ./valor-install.sh --silent release-3.15 cpu"
+       echo "sudo ./valor-install.sh --silent release-4.4.2 cpu"
        echo ""
-       echo "sudo ./valor-install.sh --silent release-3.15"
+       echo "sudo ./valor-install.sh --silent release-4.4.2"
        echo ""
        echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
        exit 0
@@ -44,7 +44,7 @@ if [ "$silentmode" = false ]; then
     echo "  This script prepares Valor config     "
     echo "                                        "
     echo "++++++++++++++++++++++++++++++++++++++++"
-    echo "Valor Release tag, e.g release-3.15: "
+    echo "Valor Release tag, e.g release-4.4.2: "
     read REL
     export NSC3REL=$REL
 fi
@@ -77,7 +77,7 @@ echo "Downloading docker images ..."
 sudo docker-compose -f docker-compose-valor.yml up -d
 echo "*********************************************************"
 echo ""                                        
-echo "NSC3 backend with Valor release $RELEASETAG is installed!"
+echo "NSC3 backend with Valor version $NSC3REL is installed!"
 echo ""
 echo "Login to your NSC3 web app by URL address"
 echo "https://$PUBLICIP"

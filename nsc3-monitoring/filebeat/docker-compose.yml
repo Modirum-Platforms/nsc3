@@ -7,7 +7,7 @@ services:
     hostname: <put hostname here>
     restart: unless-stopped
     environment:
-      - ELASTICSEARCH_HOSTS=logs.nsiontec.com
+      - ELASTICSEARCH_HOSTS=example.com
       - ELASTICSEARCH_USERNAME=elastic
       - ELASTICSEARCH_PASSWORD=<put elastic pw here>
     labels:

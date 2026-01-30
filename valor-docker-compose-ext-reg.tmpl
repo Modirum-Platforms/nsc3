@@ -1,50 +1,10 @@
-### ReleaseTagStart latest
-# This is for nsc3 version 4.0 and later
-version: "2.3"
-services:
-  valor-postgres:
-    container_name: valor-postgres
-    image: $NSC3REG/valor-postgres:$NSC3REL
-    networks: 
-      - nsc-network
-    restart: unless-stopped
-    volumes:
-        - valor-postgres-volume-15:/var/lib/postgresql/data:rw
-  nsc-valor-bus:
-    container_name: nsc-valor-bus
-    image: $NSC3REG/nsc-valor-bus:$NSC3REL
-    runtime: nvidia
-    networks: 
-      - nsc-network
-    depends_on:
-        - "valor-postgres"
-    restart: unless-stopped
-    volumes:
-        - nsc-valor-bus-volume:/data:rw
-  nsc-valor-tasker-service:
-    container_name: nsc-valor-tasker-service
-    image: $NSC3REG/nsc-valor-tasker-service:$NSC3REL
-    environment:
-        - MEMORY="8g"
-    networks: 
-      - nsc-network
-volumes:
-  valor-postgres-volume-15:
-    name: valor-postgres-volume-15
-  nsc-valor-bus-volume:
-    name: nsc-valor-bus-volume
-networks:
-  nsc-network:
-    external:
-      name: "nsc-network"
-### ReleaseTagEnd latest
 ### ReleaseTagStart rc
 # This is for nsc3 version 4.0 and later
 version: "2.3"
 services:
   valor-postgres:
     container_name: valor-postgres
-    image: $NSC3REG/valor-postgres:$NSC3REL
+    image: $NSC3REG/dev/valor-postgres:$NSC3REL
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -52,7 +12,7 @@ services:
         - valor-postgres-volume-15:/var/lib/postgresql/data:rw
   nsc-valor-bus:
     container_name: nsc-valor-bus
-    image: $NSC3REG/nsc-valor-bus:$NSC3REL
+    image: $NSC3REG/dev/nsc-valor-bus:$NSC3REL
     runtime: nvidia
     networks: 
       - nsc-network
@@ -63,7 +23,7 @@ services:
         - nsc-valor-bus-volume:/data:rw
   nsc-valor-tasker-service:
     container_name: nsc-valor-tasker-service
-    image: $NSC3REG/nsc-valor-tasker-service:$NSC3REL
+    image: $NSC3REG/dev/nsc-valor-tasker-service:$NSC3REL
     environment:
         - MEMORY="8g"
     networks: 
@@ -78,6 +38,46 @@ networks:
     external:
       name: "nsc-network"
 ### ReleaseTagEnd rc
+### ReleaseTagStart release-4.4.2
+# This is for nsc3 version 4.1 and later
+version: "2.3"
+services:
+  valor-postgres:
+    container_name: valor-postgres
+    image: $NSC3REG/valor-postgres:$NSC3REL
+    networks: 
+      - nsc-network
+    restart: unless-stopped
+    volumes:
+        - valor-postgres-volume-15:/var/lib/postgresql/data:rw
+  nsc-valor-bus:
+    container_name: nsc-valor-bus
+    image: $NSC3REG/nsc-valor-bus:valor-bus-clean-install-hotfix
+    runtime: nvidia
+    networks: 
+      - nsc-network
+    depends_on:
+        - "valor-postgres"
+    restart: unless-stopped
+    volumes:
+        - nsc-valor-bus-volume:/data:rw
+  nsc-valor-tasker-service:
+    container_name: nsc-valor-tasker-service
+    image: $NSC3REG/nsc-valor-tasker-service:$NSC3REL
+    environment:
+        - MEMORY="8g"
+    networks: 
+      - nsc-network
+volumes:
+  valor-postgres-volume-15:
+    name: valor-postgres-volume-15
+  nsc-valor-bus-volume:
+    name: nsc-valor-bus-volume
+networks:
+  nsc-network:
+    external:
+      name: "nsc-network"
+### ReleaseTagEnd release-4.4.2
 ### ReleaseTagStart release-4.3
 # This is for nsc3 version 4.1 and later
 version: "2.3"
@@ -524,7 +524,7 @@ services:
         - analytics-bus-volume:/data:rw
   nsc-analytics-cookbook:
     container_name: nsc-analytics-cookbook
-    image: registry.menturagroup.com/nsc3/docker-images/nsc-analytics-cookbook:$NSC3REL
+    image: $NSC3REG/nsc-analytics-cookbook:$NSC3REL
     networks:
         nsc-network:
             ipv4_address: "172.18.0.24"
@@ -580,7 +580,7 @@ services:
         - analytics-bus-volume:/data:rw
   nsc-analytics-cookbook:
     container_name: nsc-analytics-cookbook
-    image: registry.menturagroup.com/nsc3/docker-images/nsc-analytics-cookbook:$NSC3REL
+    image: $NSC3REG/nsc-analytics-cookbook:$NSC3REL
     networks:
         nsc-network:
             ipv4_address: "172.18.0.24"
@@ -636,7 +636,7 @@ services:
         - analytics-bus-volume:/data:rw
   nsc-analytics-cookbook:
     container_name: nsc-analytics-cookbook
-    image: registry.menturagroup.com/nsc3/docker-images/nsc-analytics-cookbook:$NSC3REL
+    image: $NSC3REG/nsc-analytics-cookbook:$NSC3REL
     networks:
         nsc-network:
             ipv4_address: "172.18.0.24"
@@ -692,7 +692,7 @@ services:
         - analytics-bus-volume:/data:rw
   nsc-analytics-cookbook:
     container_name: nsc-analytics-cookbook
-    image: registry.menturagroup.com/nsc3/docker-images/nsc-analytics-cookbook:$NSC3REL
+    image: $NSC3REG/nsc-analytics-cookbook:$NSC3REL
     networks:
         nsc-network:
             ipv4_address: "172.18.0.24"

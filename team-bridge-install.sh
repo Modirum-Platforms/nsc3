@@ -1,6 +1,6 @@
 #!/bin/bash
 ## NSC3 registry:
-export NSC3REG="registry.menturagroup.com/nsc3/docker-images"
+export NSC3REG="modirumplatforms.azurecr.io"
 TIMESTAMP=$(date +%Y%m%d%H%M)
 silentmode=false
 if [ ${1+"true"} ]; then
@@ -158,7 +158,7 @@ if ! [[ $TBMODE = TCP ]]; then
    fi
 fi
 # Grep release tag value
-NSC3REL=$(cat $NSCHOME/docker-compose.yml | grep registry.menturagroup.com/nsc3/docker-images/main-postgres: | cut -d\: -f3)
+NSC3REL=$(cat $NSCHOME/docker-compose.yml | grep modirumplatforms.azurecr.io/main-postgres: | cut -d\: -f3)
 echo "*** Current release tag: $NSC3REL  ***" 
 RELEASETAG=$NSC3REL
 # Update env variables
@@ -353,7 +353,7 @@ sudo docker-compose up -d
 echo ""
 echo "************************************************************************"
 echo "                                                       "                                        
-echo "NSC3 backend release $RELEASETAG is installed with  "
+echo "NSC3 backend version $NSC3REL is installed with  "
 echo "Team-Bridge role: $TBROLE using $TBMODE protocol    "
 if [ $TBROLE = client ]; then echo "Source org ID: $SOURCEORG ServerIP: $TBSERVERIP "; fi
 if [ $TBROLE = server ]; then echo "Source org ID: $SOURCEORG Target org ID: $TARGETORG "; fi
