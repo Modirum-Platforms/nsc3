@@ -93,91 +93,59 @@ if [ -f "$SSLFOLDER/fullchain.pem" ]; then
 fi
 if [ "$silentmode" = false ]; then
    echo "Map files options : "
-   echo "1. North America map"
-   echo "2. Europa map"
-   echo "3. Australia map"
-   echo "4. GCC states map"
-   echo "5. Skip maptile downloading ..."
+   echo "1. European map (24.5 GiB)"
+   echo "2. Global map (69.9 GiB)"
+   echo "3. Skip maptile downloading ..."
    echo "Select your option as number: "
    declare -i MAP_OPTION
    read MAP_OPTION
    if [ $MAP_OPTION -eq 1 ]; then
-       export MAPNAME="North America"
-       echo "Selected map file is $MAPNAME. Size 15.19 GiB"
-       echo -n "Do you want to downloading the map file? (y/n): "
+       export MAPNAME="Europe"
+       echo "Selected map file is $MAPNAME. Size 24.5 GiB"
+       echo -n "Do you want to download the map file? (y/n): "
        read answer
        if [ "$answer" != "${answer#[Yy]}" ] ;then
-           REGION="NA"
+           REGION="EU"
        else
            echo "Continue installation without maptiles ..."
        fi
    fi
     if [ $MAP_OPTION -eq 2 ];then
-        export MAPNAME="Europe"
-        echo "Selected map file is $MAPNAME. Size 19.39 GiB"
-        echo -n "Do you want to downloading the map file?? (y/n): "
+        export MAPNAME="Global"
+        echo "Selected map file is $MAPNAME. Size 69.9 GiB"
+        echo -n "Do you want to download the map file?? (y/n): "
         read answer
         if [ "$answer" != "${answer#[Yy]}" ] ;then
-            REGION="EU"
+            REGION="GLB"
         else
             echo "Continue installation without maptiles ..."
         fi
-    fi
+    fi   
     if [ $MAP_OPTION -eq 3 ]; then
-        export MAPNAME="Australia"
-        echo "Selected map file is $MAPNAME. Size 1.21 GiB"
-        echo -n "Do you want to downloading the map file? (y/n): "
-        read answer
-        if [ "$answer" != "${answer#[Yy]}" ] ;then
-            REGION="AUS"
-        else
-            echo "Continue installation without maptiles ..."
-        fi
-    fi
-    if [ $MAP_OPTION -eq 4 ]; then
-        export MAPNAME="GCC states"
-        echo "Selected map file is $MAPNAME. Size 390.52 MiB"
-        echo -n "Do you want to downloading the map file? (y/n): "
-        read answer
-        if [ "$answer" != "${answer#[Yy]}" ] ;then
-            REGION="GCC"
-        else
-            echo "Continue installation without maptiles ..."
-        fi
-    fi    
-    if [ $MAP_OPTION -eq 5 ]; then
         
        REGION="false"
         
     fi
-    if [ $MAP_OPTION -gt 5 ]
+    if [ $MAP_OPTION -gt 3 ]
     then
-        echo "Selected value $MAP_OPTION is out of range 1-5!"
+        echo "Selected value $MAP_OPTION is out of range 1-3!"
     exit 0
     fi
     if [ $MAP_OPTION -lt 1 ]
     then
-        echo "Selected value $MAP_OPTION  is out of range 1-5!"
+        echo "Selected value $MAP_OPTION  is out of range 1-3!"
     exit 0
     fi
 fi
 # Download Map file:
 if [ $REGION == "EU" ]; then 
-     wget -k -O $NSCHOME/mapdata/europe.mbtiles "https://nscdevstorage.blob.core.windows.net/maptiler/europe.mbtiles?sp=r&st=2023-02-27T12:04:08Z&se=2025-02-27T20:04:08Z&sv=2021-06-08&sr=b&sig=BaISloviRuplrGsECr%2Fo%2FcxjFrLmVcN7KS4qXdzJJv8%3D"
-     echo "*** $MAPNAME map file is downloaded ***"
+     wget -k -O $NSCHOME/mapdata/europe.mbtiles "https://modirumplatforms.blob.core.windows.net/nsc3/osm-2020-02-10-v3.11_europe.mbtiles"
+     echo "*** $MAPNAME map file has been downloaded ***"
 fi     
-if [ $REGION == "NA" ]; then 
-     wget -k -O $NSCHOME/mapdata/north_america.mbtiles "https://nscdevstorage.blob.core.windows.net/maptiler/north-america.mbtiles?sp=r&st=2023-02-27T12:05:58Z&se=2025-02-27T20:05:58Z&sv=2021-06-08&sr=b&sig=VwKJLyy29YlQZ%2BtpFREz7Bh35ZxenfAszIiQNGVnhT0%3D"
-     echo "*** $MAPNAME map file is downloaded ***"
-fi     
-if [ $REGION == "AUS" ]; then 
-     wget -k -O $NSCHOME/mapdata/australia.mbtiles "https://nscdevstorage.blob.core.windows.net/maptiler/australia-oceania_australia.mbtiles?sp=r&st=2023-02-27T12:10:51Z&se=2025-02-27T20:10:51Z&sv=2021-06-08&sr=b&sig=eToyiT7yDb1s4CHDl1ZMXxh0%2BJ4EAqa3rzzDt98kezM%3D"
-     echo "*** $MAPNAME map file is downloaded ***"
-fi     
-if [ $REGION == "GCC" ]; then 
-     wget -k -O $NSCHOME/mapdata/asia.mbtiles "https://nscdevstorage.blob.core.windows.net/maptiler/asia_gcc-states.mbtiles?sp=r&st=2023-02-27T12:07:33Z&se=2025-02-27T20:07:33Z&sv=2021-06-08&sr=b&sig=7upeiUU7Y%2B7qrviKIi8Ceoiq5vZWSLO%2FdmELOcfq7l4%3D"
-     echo "*** $MAPNAME map file is downloaded ***"
-fi     
+if [ $REGION == "GLB" ]; then 
+     wget -k -O $NSCHOME/mapdata/global.mbtiles "https://modirumplatforms.blob.core.windows.net/nsc3/maptiler-osm-2020-02-10-v3.11-planet.mbtiles"
+     echo "*** $MAPNAME map file has been downloaded ***"
+fi        
 if [ $REGION == "false" ]; then 
      echo "*** Installation without maptiles downloading ***"
 fi 
