@@ -16,7 +16,7 @@ services:
     working_dir: /root
   user-postgres:
     container_name: user-postgres
-    image: $NSC3REG/user-postgres:$NSC3REL
+    image: $NSC3REG/dev/user-postgres:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -40,7 +40,7 @@ services:
     working_dir: /root
   nsc-scheduler-service:
     container_name: nsc-scheduler-service
-    image: $NSC3REG/nsc-scheduler-service:$NSC3REL
+    image: $NSC3REG/dev/nsc-scheduler-service:$NSC3REL
     environment:
       - NSC3_SCHEDULER_SERVICE_VALOR_ENABLED=$VALOR_ENABLED
     logging:
@@ -51,7 +51,7 @@ services:
     restart: unless-stopped
   nsc-auth-service:
     container_name: nsc-auth-service
-    image: $NSC3REG/nsc-auth-service:$NSC3REL
+    image: $NSC3REG/dev/nsc-auth-service:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
