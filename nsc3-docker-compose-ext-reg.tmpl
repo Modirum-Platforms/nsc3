@@ -340,80 +340,6 @@ services:
         -XX:HeapDumpPath=/dumps
         -Xlog:os+container=info
     working_dir: /root
-  nsc-notify-service:
-    container_name: nsc-notify-service
-    image: $NSC3REG/dev/nsc-notify-service:$NSC3REL
-    depends_on:
-      dumps-perms:
-        condition: service_completed_successfully
-    profiles:
-      - notify-service  
-    logging:
-      driver: "json-file"
-      options: {}
-    networks: 
-      - nsc-network
-    restart: unless-stopped
-    volumes:
-      - dumps:/dumps:rw
-      - /dev/urandom:/dev/random:rw
-    mem_limit: 1024m
-    memswap_limit: 1024m
-    environment:
-      QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
-      QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
-      GC_OPTIONS: >-
-        -XX:+UseZGC
-        -XX:+ZGenerational
-      QUARKUS_PROFILE: prod
-      JAVA_TOOL_OPTIONS: >-
-        -XX:+UseContainerSupport
-        -XX:InitialRAMPercentage=20
-        -XX:MaxRAMPercentage=70
-        -XX:MinRAMPercentage=50
-        -XX:+ExitOnOutOfMemoryError
-        -XX:+HeapDumpOnOutOfMemoryError
-        -XX:HeapDumpPath=/dumps
-        -Xlog:os+container=info
-    working_dir: /root
-  nsc-team-bridge-service:
-    container_name: nsc-team-bridge-service
-    image: $NSC3REG/dev/nsc-team-bridge-service:$NSC3REL
-    depends_on:
-      dumps-perms:
-        condition: service_completed_successfully
-    profiles:
-      - team-bridge
-    env_file:
-        - nsc-team-bridge-service-server.env
-        - nsc3.env
-    networks: 
-      - nsc-network
-    ports:
-      - "64660:64660/udp"
-    restart: unless-stopped 
-    volumes:
-      - dumps:/dumps:rw
-      - /dev/urandom:/dev/random:rw
-    mem_limit: 8192m
-    memswap_limit: 8192m
-    environment:
-      QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
-      QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
-      GC_OPTIONS: >-
-        -XX:+UseZGC
-        -XX:+ZGenerational
-      QUARKUS_PROFILE: prod
-      JAVA_TOOL_OPTIONS: >-
-        -XX:+UseContainerSupport
-        -XX:InitialRAMPercentage=20
-        -XX:MaxRAMPercentage=70
-        -XX:MinRAMPercentage=50
-        -XX:+ExitOnOutOfMemoryError
-        -XX:+HeapDumpOnOutOfMemoryError
-        -XX:HeapDumpPath=/dumps
-        -Xlog:os+container=info
-    working_dir: /root
   web-nginx:
     container_name: web-nginx
     image: $NSC3REG/dev/web-nginx:$NSC3REL
@@ -497,7 +423,7 @@ services:
     environment:
       - PROTOO_LISTEN_PORT=8080
       - WEBSOCKET_LISTEN_PORT=8080
-      - MEDIASOUP_ANNOUNCED_IP=127.0.0.1
+      - MEDIASOUP_ANNOUNCED_IP=$EXTIP
       - MEDIASOUP_MIN_PORT=40000
       - MEDIASOUP_MAX_PORT=40007
       - API_PROTOCOL=http://
@@ -548,18 +474,6 @@ volumes:
 #   docker compose down
 # Usage stop only container, e.g nsc-scheduler-service:
 #   docker compose nsc-scheduler-service down
-# Optional feeatures start:
-# TeamBridge: 
-#   docker compose --profile team-bridge up -d 
-# NotifyService:
-#   docker compose --profile notify-service up -d 
-# Optional feeatures stop:
-# TeamBridge: 
-#   docker compose --profile team-bridge down
-# NotifyService:
-#   docker compose --profile notify-service down
-# Using overrides in case of 32GB RAM
-#   docker compose -f docker-compose.yml -f docker-compose.override32GB.yml
 
 services:
   main-postgres:
@@ -589,8 +503,13 @@ services:
   nsc-scheduler-service:
     container_name: nsc-scheduler-service
     image: $NSC3REG/dev/nsc-scheduler-service:$NSC3REL
+    depends_on:
+      dumps-perms:
+        condition: service_completed_successfully
     mem_limit: 1024m
     memswap_limit: 1024m
+    volumes:
+      - dumps:/dumps:rw
     logging:
       driver: "json-file"
       options: {}
@@ -601,6 +520,9 @@ services:
       NSC3_SCHEDULER_SERVICE_VALOR_ENABLED: $VALOR_ENABLED     
       QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
       QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
+      GC_OPTIONS: >-
+        -XX:+UseZGC
+        -XX:+ZGenerational
       QUARKUS_PROFILE: prod
       JAVA_TOOL_OPTIONS: >-
         -XX:+UseContainerSupport
@@ -611,9 +533,13 @@ services:
         -XX:+HeapDumpOnOutOfMemoryError
         -XX:HeapDumpPath=/dumps
         -Xlog:os+container=info
+    working_dir: /root
   nsc-auth-service:
     container_name: nsc-auth-service
     image: $NSC3REG/dev/nsc-auth-service:$NSC3REL
+    depends_on:
+      dumps-perms:
+        condition: service_completed_successfully
     mem_limit: 1024m
     memswap_limit: 1024m
     logging:
@@ -624,9 +550,13 @@ services:
     restart: unless-stopped
     volumes:
       - /dev/urandom:/dev/random:rw
+      - dumps:/dumps:rw
     environment:
       QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
       QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
+      GC_OPTIONS: >-
+        -XX:+UseZGC
+        -XX:+ZGenerational
       QUARKUS_PROFILE: prod
       JAVA_TOOL_OPTIONS: >-
         -XX:+UseContainerSupport
@@ -641,12 +571,16 @@ services:
   nsc-stream-in-service:
     container_name: nsc-stream-in-service
     image: $NSC3REG/dev/nsc-stream-in-service:$NSC3REL
+    depends_on:
+      dumps-perms:
+        condition: service_completed_successfully
     logging:
       driver: "json-file"
       options: {}    
     volumes:
       - /dev/urandom:/dev/random:rw
-      - $NSCHOME/nsc-gateway-cert:/mnt/cert 
+      - $NSCHOME/nsc-gateway-cert:/mnt/cert
+      - dumps:/dumps:rw
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -655,6 +589,9 @@ services:
     environment:
       QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
       QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
+      GC_OPTIONS: >-
+        -XX:+UseZGC
+        -XX:+ZGenerational
       QUARKUS_PROFILE: prod
       JAVA_TOOL_OPTIONS: >-
         -XX:+UseContainerSupport
@@ -669,11 +606,15 @@ services:
   nsc-stream-in-service-legacy:
     container_name: nsc-stream-in-service-legacy
     image: $NSC3REG/dev/nsc-stream-in-service-legacy:$NSC3REL
+    depends_on:
+      dumps-perms:
+        condition: service_completed_successfully
     logging:
       driver: "json-file"
       options: {}    
     volumes:
       - /dev/urandom:/dev/random:rw
+      - dumps:/dumps:rw
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -682,6 +623,9 @@ services:
     environment:
       QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
       QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
+      GC_OPTIONS: >-
+        -XX:+UseZGC
+        -XX:+ZGenerational
       QUARKUS_PROFILE: prod
       JAVA_TOOL_OPTIONS: >-
         -XX:+UseContainerSupport
@@ -696,18 +640,25 @@ services:
   nsc-live-service:
     container_name: nsc-live-service
     image: $NSC3REG/dev/nsc-live-service:$NSC3REL
+    depends_on:
+      dumps-perms:
+        condition: service_completed_successfully
     logging:
       driver: "json-file"
       options: {}
     networks: 
       - nsc-network
     restart: unless-stopped
-    working_dir: /root
+    volumes:
+      - dumps:/dumps:rw
     mem_limit: 1536m
     memswap_limit: 1536m
     environment:
       QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
       QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
+      GC_OPTIONS: >-
+        -XX:+UseZGC
+        -XX:+ZGenerational
       QUARKUS_PROFILE: prod
       JAVA_TOOL_OPTIONS: >-
         -XX:+UseContainerSupport
@@ -718,9 +669,13 @@ services:
         -XX:+HeapDumpOnOutOfMemoryError
         -XX:HeapDumpPath=/dumps
         -Xlog:os+container=info
+    working_dir: /root
   nsc-comms-service:
     container_name: nsc-comms-service
     image: $NSC3REG/dev/nsc-comms-service:$NSC3REL
+    depends_on:
+      dumps-perms:
+        condition: service_completed_successfully
     mem_limit: 1536m
     memswap_limit: 1536m
     logging:
@@ -731,10 +686,13 @@ services:
     restart: unless-stopped
     volumes:
       - /dev/urandom:/dev/random:rw
-    working_dir: /root
+      - dumps:/dumps:rw
     environment:
       QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
       QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
+      GC_OPTIONS: >-
+        -XX:+UseZGC
+        -XX:+ZGenerational
       QUARKUS_PROFILE: prod
       JAVA_TOOL_OPTIONS: >-
         -XX:+UseContainerSupport
@@ -745,9 +703,13 @@ services:
         -XX:+HeapDumpOnOutOfMemoryError
         -XX:HeapDumpPath=/dumps
         -Xlog:os+container=info
+    working_dir: /root
   nsc-playback-service:
     container_name: nsc-playback-service
     image: $NSC3REG/dev/nsc-playback-service:$NSC3REL
+    depends_on:
+      dumps-perms:
+        condition: service_completed_successfully
     mem_limit: 1536m
     memswap_limit: 1536m
     logging:
@@ -756,10 +718,14 @@ services:
     networks: 
       - nsc-network
     restart: unless-stopped
-    working_dir: /root
+    volumes:
+      - dumps:/dumps:rw
     environment:
       QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
       QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
+      GC_OPTIONS: >-
+        -XX:+UseZGC
+        -XX:+ZGenerational
       QUARKUS_PROFILE: prod
       JAVA_TOOL_OPTIONS: >-
         -XX:+UseContainerSupport
@@ -770,9 +736,13 @@ services:
         -XX:+HeapDumpOnOutOfMemoryError
         -XX:HeapDumpPath=/dumps
         -Xlog:os+container=info
+    working_dir: /root
   nsc-network-stream-service:
     container_name: nsc-network-stream-service
     image: $NSC3REG/dev/nsc-network-stream-service:$NSC3REL
+    depends_on:
+      dumps-perms:
+        condition: service_completed_successfully
     ipc: private
     logging:
       driver: "json-file"
@@ -780,11 +750,16 @@ services:
     networks: 
       - nsc-network
     restart: unless-stopped
+    volumes:
+      - dumps:/dumps:rw
     mem_limit: 4096m
     memswap_limit: 4096m
     environment:
       QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
       QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
+      GC_OPTIONS: >-
+        -XX:+UseZGC
+        -XX:+ZGenerational
       QUARKUS_PROFILE: prod
       JAVA_TOOL_OPTIONS: >-
         -XX:+UseContainerSupport
@@ -795,35 +770,13 @@ services:
         -XX:+HeapDumpOnOutOfMemoryError
         -XX:HeapDumpPath=/dumps
         -Xlog:os+container=info
+    working_dir: /root
   nsc-aar-worker:
     container_name: nsc-aar-worker
     image: $NSC3REG/dev/nsc-aar-worker:$NSC3REL
-    logging:
-      driver: "json-file"
-      options: {}
-    networks: 
-      - nsc-network
-    restart: unless-stopped
-    mem_limit: 4096m
-    memswap_limit: 4096m
-    environment:
-      QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
-      QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
-      QUARKUS_PROFILE: prod
-      JAVA_TOOL_OPTIONS: >-
-        -XX:+UseContainerSupport
-        -XX:InitialRAMPercentage=20
-        -XX:MaxRAMPercentage=70
-        -XX:MinRAMPercentage=50
-        -XX:+ExitOnOutOfMemoryError
-        -XX:+HeapDumpOnOutOfMemoryError
-        -XX:HeapDumpPath=/dumps
-        -Xlog:os+container=info
-  nsc-notify-service:
-    container_name: nsc-notify-service
-    image: $NSC3REG/dev/nsc-notify-service:$NSC3REL
-    profiles:
-      - notify-service  
+    depends_on:
+      dumps-perms:
+        condition: service_completed_successfully
     logging:
       driver: "json-file"
       options: {}
@@ -831,51 +784,26 @@ services:
       - nsc-network
     restart: unless-stopped
     volumes:
-      - /dev/urandom:/dev/random:rw
+      - dumps:/dumps:rw
+    mem_limit: 4096m
+    memswap_limit: 4096m
+    environment:
+      QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
+      QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
+      GC_OPTIONS: >-
+        -XX:+UseZGC
+        -XX:+ZGenerational
+      QUARKUS_PROFILE: prod
+      JAVA_TOOL_OPTIONS: >-
+        -XX:+UseContainerSupport
+        -XX:InitialRAMPercentage=20
+        -XX:MaxRAMPercentage=70
+        -XX:MinRAMPercentage=50
+        -XX:+ExitOnOutOfMemoryError
+        -XX:+HeapDumpOnOutOfMemoryError
+        -XX:HeapDumpPath=/dumps
+        -Xlog:os+container=info
     working_dir: /root
-    mem_limit: 1024m
-    memswap_limit: 1024m
-    environment:
-      QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
-      QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
-      QUARKUS_PROFILE: prod
-      JAVA_TOOL_OPTIONS: >-
-        -XX:+UseContainerSupport
-        -XX:InitialRAMPercentage=20
-        -XX:MaxRAMPercentage=70
-        -XX:MinRAMPercentage=50
-        -XX:+ExitOnOutOfMemoryError
-        -XX:+HeapDumpOnOutOfMemoryError
-        -XX:HeapDumpPath=/dumps
-        -Xlog:os+container=info
-  nsc-team-bridge-service:
-    container_name: nsc-team-bridge-service
-    image: $NSC3REG/dev/nsc-team-bridge-service:$NSC3REL
-    profiles:
-      - team-bridge
-    env_file:
-        - nsc-team-bridge-service-server.env
-        - nsc3.env
-    networks: 
-      - nsc-network
-    ports:
-      - "64660:64660/udp"
-    restart: unless-stopped 
-    mem_limit: 8192m
-    memswap_limit: 8192m
-    environment:
-      QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
-      QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
-      QUARKUS_PROFILE: prod
-      JAVA_TOOL_OPTIONS: >-
-        -XX:+UseContainerSupport
-        -XX:InitialRAMPercentage=20
-        -XX:MaxRAMPercentage=70
-        -XX:MinRAMPercentage=50
-        -XX:+ExitOnOutOfMemoryError
-        -XX:+HeapDumpOnOutOfMemoryError
-        -XX:HeapDumpPath=/dumps
-        -Xlog:os+container=info
   web-nginx:
     container_name: web-nginx
     image: $NSC3REG/dev/web-nginx:$NSC3REL
@@ -959,7 +887,7 @@ services:
     environment:
       - PROTOO_LISTEN_PORT=8080
       - WEBSOCKET_LISTEN_PORT=8080
-      - MEDIASOUP_ANNOUNCED_IP=127.0.0.1
+      - MEDIASOUP_ANNOUNCED_IP=$EXTIP
       - MEDIASOUP_MIN_PORT=40000
       - MEDIASOUP_MAX_PORT=40007
       - API_PROTOCOL=http://
@@ -973,6 +901,14 @@ services:
       - MINIO_SECRET_KEY=$MINIOSECRET
       - REDIS_ENDPOINT=bus-redis
       - REDIS_PORT=6379
+  dumps-perms:
+    image: modirumplatforms.azurecr.io/dev/nsc-scheduler-service:rc-4.5-2   # tai joku muu teidän image
+    user: "0:0"
+    volumes:
+      - dumps:/dumps
+    entrypoint: ["sh", "-lc"]
+    command: ["chmod 2770 /dumps && ls -ld /dumps"]
+    restart: "no"
 networks:
   nsc-network:
     name: nsc-network
@@ -988,7 +924,7 @@ volumes:
     name: bus-redis-volume
   minio-volume:
     name: minio-volume
-  dumps: {}
+  dumps: {} 
 ### ReleaseTagEnd release-4.5
 ### ReleaseTagStart release-4.4.2
 # This is for nsc3 version 4.1 and later
