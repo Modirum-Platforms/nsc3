@@ -478,7 +478,7 @@ volumes:
 services:
   main-postgres:
     container_name: main-postgres
-    image: $NSC3REG/dev/main-postgres:$NSC3REL
+    image: $NSC3REG/main-postgres:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -490,7 +490,7 @@ services:
     working_dir: /root
   bus-redis:
     container_name: bus-redis
-    image: $NSC3REG/dev/bus-redis:$NSC3REL
+    image: $NSC3REG/bus-redis:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -502,7 +502,7 @@ services:
     working_dir: /root
   nsc-scheduler-service:
     container_name: nsc-scheduler-service
-    image: $NSC3REG/dev/nsc-scheduler-service:$NSC3REL
+    image: $NSC3REG/nsc-scheduler-service:$NSC3REL
     depends_on:
       dumps-perms:
         condition: service_completed_successfully
@@ -536,7 +536,7 @@ services:
     working_dir: /root
   nsc-auth-service:
     container_name: nsc-auth-service
-    image: $NSC3REG/dev/nsc-auth-service:$NSC3REL
+    image: $NSC3REG/nsc-auth-service:$NSC3REL
     depends_on:
       dumps-perms:
         condition: service_completed_successfully
@@ -570,7 +570,7 @@ services:
     working_dir: /root
   nsc-stream-in-service:
     container_name: nsc-stream-in-service
-    image: $NSC3REG/dev/nsc-stream-in-service:$NSC3REL
+    image: $NSC3REG/nsc-stream-in-service:$NSC3REL
     depends_on:
       dumps-perms:
         condition: service_completed_successfully
@@ -605,7 +605,7 @@ services:
     working_dir: /root
   nsc-stream-in-service-legacy:
     container_name: nsc-stream-in-service-legacy
-    image: $NSC3REG/dev/nsc-stream-in-service-legacy:$NSC3REL
+    image: $NSC3REG/nsc-stream-in-service-legacy:$NSC3REL
     depends_on:
       dumps-perms:
         condition: service_completed_successfully
@@ -639,7 +639,7 @@ services:
     working_dir: /root
   nsc-live-service:
     container_name: nsc-live-service
-    image: $NSC3REG/dev/nsc-live-service:$NSC3REL
+    image: $NSC3REG/nsc-live-service:$NSC3REL
     depends_on:
       dumps-perms:
         condition: service_completed_successfully
@@ -672,7 +672,7 @@ services:
     working_dir: /root
   nsc-comms-service:
     container_name: nsc-comms-service
-    image: $NSC3REG/dev/nsc-comms-service:$NSC3REL
+    image: $NSC3REG/nsc-comms-service:$NSC3REL
     depends_on:
       dumps-perms:
         condition: service_completed_successfully
@@ -706,7 +706,7 @@ services:
     working_dir: /root
   nsc-playback-service:
     container_name: nsc-playback-service
-    image: $NSC3REG/dev/nsc-playback-service:$NSC3REL
+    image: $NSC3REG/nsc-playback-service:$NSC3REL
     depends_on:
       dumps-perms:
         condition: service_completed_successfully
@@ -739,7 +739,7 @@ services:
     working_dir: /root
   nsc-network-stream-service:
     container_name: nsc-network-stream-service
-    image: $NSC3REG/dev/nsc-network-stream-service:$NSC3REL
+    image: $NSC3REG/nsc-network-stream-service:$NSC3REL
     depends_on:
       dumps-perms:
         condition: service_completed_successfully
@@ -773,7 +773,7 @@ services:
     working_dir: /root
   nsc-aar-worker:
     container_name: nsc-aar-worker
-    image: $NSC3REG/dev/nsc-aar-worker:$NSC3REL
+    image: $NSC3REG/nsc-aar-worker:$NSC3REL
     depends_on:
       dumps-perms:
         condition: service_completed_successfully
@@ -806,7 +806,7 @@ services:
     working_dir: /root
   web-nginx:
     container_name: web-nginx
-    image: $NSC3REG/dev/web-nginx:$NSC3REL
+    image: $NSC3REG/web-nginx:$NSC3REL
     logging:
       driver: "json-file"
       options:
@@ -819,7 +819,7 @@ services:
     restart: unless-stopped
   map-service:
     container_name: map-service
-    image: $NSC3REG/dev/map-service:$NSC3REL
+    image: $NSC3REG/map-service:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -832,7 +832,7 @@ services:
     working_dir: /data
   nsc-gateway:
     container_name: nsc-gateway
-    image: $NSC3REG/dev/nsc-gateway:$NSC3REL
+    image: $NSC3REG/nsc-gateway:$NSC3REL
     logging:
       driver: "json-file"
       options:
@@ -854,7 +854,7 @@ services:
       - $NSCHOME/nsc-gateway-cert:/mnt/cert 
   nsc-minio:
     container_name: nsc-minio
-    image: $NSC3REG/dev/nsc-minio:$NSC3REL
+    image: $NSC3REG/nsc-minio:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -866,7 +866,7 @@ services:
     command: ['server', '/data']
   rtmp-server:
     container_name: rtmp-server
-    image: $NSC3REG/dev/rtmp-server:$NSC3REL
+    image: $NSC3REG/rtmp-server:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -877,7 +877,7 @@ services:
       - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   nsc-webrtc-proxy:
     container_name: nsc-webrtc-proxy
-    image: $NSC3REG/dev/nsc-webrtc-proxy:$NSC3REL
+    image: $NSC3REG/nsc-webrtc-proxy:$NSC3REL
     logging:
       driver: "json-file"
       options: {}
@@ -902,7 +902,7 @@ services:
       - REDIS_ENDPOINT=bus-redis
       - REDIS_PORT=6379
   dumps-perms:
-    image: modirumplatforms.azurecr.io/dev/nsc-scheduler-service::$NSC3REL   # tai joku muu teidän image
+    image: modirumplatforms.azurecr.io/nsc-scheduler-service::$NSC3REL   # tai joku muu teidän image
     user: "0:0"
     volumes:
       - dumps:/dumps
