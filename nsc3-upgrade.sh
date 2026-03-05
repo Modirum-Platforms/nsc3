@@ -106,7 +106,7 @@ fi
 mv docker-compose.yml docker-compose-$NSC3REL.old 2> /dev/null
 
 (echo "cat <<EOF >docker-compose-temp.yml";
-cat nsc3-docker-compose-ext-reg.tmpl | sed -n '/'"$RELEASETAG"'/,/'"$RELEASETAG"'/p';
+cat nsc3-docker-compose-ext-reg.tmpl | sed -n '/'"ReleaseTagStart $RELEASETAG"'/,/'"ReleaseTagEnd $RELEASETAG"'/p';
 ) >temp.yml
 . temp.yml 2> /dev/null
 cat docker-compose-temp.yml > docker-compose.yml;
