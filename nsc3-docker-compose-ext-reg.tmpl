@@ -438,7 +438,7 @@ services:
       - REDIS_ENDPOINT=bus-redis
       - REDIS_PORT=6379
   dumps-perms:
-    image: modirumplatforms.azurecr.io/dev/nsc-scheduler-service::$NSC3REL   # tai joku muu teidän image
+    image: $NSC3REG/dev/nsc-scheduler-service:$NSC3REL   # tai joku muu teidän image
     user: "0:0"
     volumes:
       - dumps:/dumps
@@ -902,7 +902,7 @@ services:
       - REDIS_ENDPOINT=bus-redis
       - REDIS_PORT=6379
   dumps-perms:
-    image: modirumplatforms.azurecr.io/nsc-scheduler-service::$NSC3REL   # tai joku muu teidän image
+    image: $NSC3REG/nsc-scheduler-service:$NSC3REL   # tai joku muu teidän image
     user: "0:0"
     volumes:
       - dumps:/dumps
