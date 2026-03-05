@@ -104,151 +104,18 @@ fi
 
 # Move old files and create new.
 mv docker-compose.yml docker-compose-$NSC3REL.old 2> /dev/null
-if [ -z "$TEAM_BRIDGE_ENABLED" ]; then
- # Backup
- if [ -f "nsc-team-bridge-service-server.env" ]; then cp nsc-team-bridge-service-server.env nsc-team-bridge-service-server-$TIMESTAMP.env 2> /dev/null; fi
- if [ -f "nsc-team-bridge-service-client.env" ]; then cp nsc-team-bridge-service-client.env nsc-team-bridge-service-client-$TIMESTAMP.env 2> /dev/null; fi
-    if [[ $TBMODE = UDP ]]; then
-      if [[ $TBROLE = client ]]; then
-         (echo "cat <<EOF >docker-compose-temp.yml";
-         cat nsc3-docker-compose-ext-reg.tmpl | sed -n '/'"$RELEASETAG"'/,/'"$RELEASETAG"'/p' |
-         sed '/add-on nsc-team-bridge-service-client-udp/,/add-off nsc-team-bridge-service-client-udp/ s/#//';
-         ) >temp.yml
-         . temp.yml 2> /dev/null
-         cat docker-compose-temp.yml > docker-compose.yml;
-         (echo "cat <<EOF >nsc-team-bridge-service-client-temp.yml";
-         cat nsc-team-bridge-service-client.tmpl;
-         ) >tb-client-temp.yml
-         . tb-client-temp.yml 2> /dev/null
-         cat nsc-team-bridge-service-client-temp.yml > nsc-team-bridge-service-client.env;
-         rm -f tb-client-temp.yml nsc-team-bridge-service-client-temp.yml temp.yml docker-compose-temp.yml 2> /dev/null
-      fi
-      if [[ $TBROLE = server ]]; then
-         (echo "cat <<EOF >docker-compose-temp.yml";
-         cat nsc3-docker-compose-ext-reg.tmpl | sed -n '/'"$RELEASETAG"'/,/'"$RELEASETAG"'/p' |
-         sed '/add-on nsc-team-bridge-service-server-udp/,/add-off nsc-team-bridge-service-server-udp/ s/#//'; 
-         ) >temp.yml
-         . temp.yml 2> /dev/null
-         cat docker-compose-temp.yml > docker-compose.yml;
-         (echo "cat <<EOF >nsc-team-bridge-service-server-temp.yml";
-         cat nsc-team-bridge-service-server.tmpl;
-         ) >tb-server-temp.yml
-         . tb-server-temp.yml 2> /dev/null
-         cat nsc-team-bridge-service-server-temp.yml > nsc-team-bridge-service-server.env;
-         rm -f tb-server-temp.yml nsc-team-bridge-service-server-temp.yml temp.yml docker-compose-temp.yml 2> /dev/null
-      fi
-      if [[ $TBROLE = both ]]; then
-         (echo "cat <<EOF >docker-compose-temp.yml";
-         cat nsc3-docker-compose-ext-reg.tmpl | sed -n '/'"$RELEASETAG"'/,/'"$RELEASETAG"'/p' | 
-         sed '/add-on nsc-team-bridge-service-server-udp/,/add-off nsc-team-bridge-service-server-udp/ s/#//' |
-         sed '/add-on nsc-team-bridge-service-client-udp/,/add-off nsc-team-bridge-service-client-udp/ s/#//';
-         ) >temp.yml
-         . temp.yml 2> /dev/null
-         cat docker-compose-temp.yml > docker-compose.yml;
-         # Client
-         (echo "cat <<EOF >nsc-team-bridge-service-client-temp.yml";
-         cat nsc-team-bridge-service-client.tmpl;
-         ) >tb-client-temp.yml
-         . tb-client-temp.yml 2> /dev/null
-         cat nsc-team-bridge-service-client-temp.yml > nsc-team-bridge-service-client.env;
-         # Server
-         # Additional variables
-         CLIENTSOURCE=$SOURCEORG
-         SERVERSOURCE=$SOURCEORG2
-         SERVERDEST=$TARGETORG2
-         SOURCEORG=$SERVERSOURCE
-         TARGETORG=$SERVERDEST
-         TBSERVERIP=$TBSERVERIP2
-         (echo "cat <<EOF >nsc-team-bridge-service-server-temp.yml";
-         cat nsc-team-bridge-service-server.tmpl;
-         ) >tb-server-temp.yml
-         . tb-server-temp.yml 2> /dev/null
-         cat nsc-team-bridge-service-server-temp.yml > nsc-team-bridge-service-server.env;
-         rm -f tb-server-temp.yml nsc-team-bridge-service-server-temp.yml tb-client-temp.yml nsc-team-bridge-service-client-temp.yml temp.yml docker-compose-temp.yml 2> /dev/null
-      fi
-   fi
-   if [[ $TBMODE = TCP ]]; then
-      if [[ $TBROLE = client ]]; then
-         (echo "cat <<EOF >docker-compose-temp.yml";
-         cat nsc3-docker-compose-ext-reg.tmpl | sed -n '/'"$RELEASETAG"'/,/'"$RELEASETAG"'/p' |
-         sed '/add-on nsc-team-bridge-service-client-tcp/,/add-off nsc-team-bridge-service-client-tcp/ s/#//';
-         ) >temp.yml
-         . temp.yml 2> /dev/null
-         cat docker-compose-temp.yml > docker-compose.yml;
-         (echo "cat <<EOF >nsc-team-bridge-service-client-temp.yml";
-         cat nsc-team-bridge-service-client.tmpl;
-         ) >tb-client-temp.yml
-         . tb-client-temp.yml 2> /dev/null
-         cat nsc-team-bridge-service-client-temp.yml > nsc-team-bridge-service-client.env;
-         rm -f tb-client-temp.yml nsc-team-bridge-service-client-temp.yml temp.yml docker-compose-temp.yml 2> /dev/null
-      fi
-      if [[ $TBROLE = server ]]; then
-         (echo "cat <<EOF >docker-compose-temp.yml";
-         cat nsc3-docker-compose-ext-reg.tmpl | sed -n '/'"$RELEASETAG"'/,/'"$RELEASETAG"'/p' |
-         sed '/add-on nsc-team-bridge-service-server-tcp/,/add-off nsc-team-bridge-service-server-tcp/ s/#//';
-         ) >temp.yml
-         . temp.yml 2> /dev/null
-         cat docker-compose-temp.yml > docker-compose.yml;
-         (echo "cat <<EOF >nsc-team-bridge-service-server-temp.yml";
-         cat nsc-team-bridge-service-server.tmpl;
-         ) >tb-server-temp.yml
-         . tb-server-temp.yml 2> /dev/null
-         cat nsc-team-bridge-service-server-temp.yml > nsc-team-bridge-service-server.env;
-         rm -f tb-server-temp.yml nsc-team-bridge-service-server-temp.yml temp.yml docker-compose-temp.yml 2> /dev/null
-      fi
-      if [[ $TBROLE = both ]]; then
-         (echo "cat <<EOF >docker-compose-temp.yml";
-         cat nsc3-docker-compose-ext-reg.tmpl | sed -n '/'"$RELEASETAG"'/,/'"$RELEASETAG"'/p' | 
-         sed '/add-on nsc-team-bridge-service-server-tcp/,/add-off nsc-team-bridge-service-server-tcp/ s/#//' |
-         sed '/add-on nsc-team-bridge-service-client-tcp/,/add-off nsc-team-bridge-service-client-tcp/ s/#//';
-         ) >temp.yml
-         . temp.yml 2> /dev/null
-         cat docker-compose-temp.yml > docker-compose.yml;
-         # Client
-         (echo "cat <<EOF >nsc-team-bridge-service-client-temp.yml";
-         cat nsc-team-bridge-service-client.tmpl;
-         ) >tb-client-temp.yml
-         . tb-client-temp.yml 2> /dev/null
-         cat nsc-team-bridge-service-client-temp.yml > nsc-team-bridge-service-client.env;
-         # Server
-         CLIENTSOURCE=$SOURCEORG
-         SERVERSOURCE=$SOURCEORG2
-         SERVERDEST=$TARGETORG2
-         SOURCEORG=$SERVERSOURCE
-         TARGETORG=$SERVERDEST
-         TBSERVERIP=$TBSERVERIP2
-         (echo "cat <<EOF >nsc-team-bridge-service-server-temp.yml";
-         cat nsc-team-bridge-service-server.tmpl;
-         ) >tb-server-temp.yml
-         . tb-server-temp.yml 2> /dev/null
-         cat nsc-team-bridge-service-server-temp.yml > nsc-team-bridge-service-server.env;
-         rm -f tb-server-temp.yml nsc-team-bridge-service-server-temp.yml tb-client-temp.yml nsc-team-bridge-service-client-temp.yml temp.yml docker-compose-temp.yml 2> /dev/null
-      fi
-    fi
-else
-   (echo "cat <<EOF >docker-compose-temp.yml";
-   cat nsc3-docker-compose-ext-reg.tmpl | sed -n '/'"$RELEASETAG"'/,/'"$RELEASETAG"'/p';
-   ) >temp.yml
-   . temp.yml 2> /dev/null
-   cat docker-compose-temp.yml > docker-compose.yml;
-   rm -f temp.yml docker-compose-temp.yml 2> /dev/null
-   if test -f docker-compose_$PUBLICIP.yml; then    mv docker-compose_$PUBLICIP.yml docker-compose_$PUBLICIP_$NSC3REL.old  2> /dev/null
-   fi
-   cp docker-compose.yml docker-compose_$PUBLICIP.yml
+
+(echo "cat <<EOF >docker-compose-temp.yml";
+cat nsc3-docker-compose-ext-reg.tmpl | sed -n '/'"$RELEASETAG"'/,/'"$RELEASETAG"'/p';
+) >temp.yml
+. temp.yml 2> /dev/null
+cat docker-compose-temp.yml > docker-compose.yml;
+rm -f temp.yml docker-compose-temp.yml 2> /dev/null
+if test -f docker-compose_$PUBLICIP.yml; then    mv docker-compose_$PUBLICIP.yml docker-compose_$PUBLICIP_$NSC3REL.old  2> /dev/null
 fi
-if ! [ $(grep -c "TEAM_BRIDGE_ENABLED" $NSCHOME/nsc-host.env) -eq 1 ]; then 
-   chmod 666 $NSCHOME/nsc-host.env
-   echo "export TEAM_BRIDGE_ENABLED=false" >> $NSCHOME/nsc-host.env
-   (echo "cat <<EOF >docker-compose-temp.yml";
-   cat nsc3-docker-compose-ext-reg.tmpl | sed -n '/'"$RELEASETAG"'/,/'"$RELEASETAG"'/p';
-   ) >temp.yml
-   . temp.yml 2> /dev/null
-   cat docker-compose-temp.yml > docker-compose.yml;
-   rm -f temp.yml docker-compose-temp.yml 2> /dev/null
-   if test -f docker-compose_$PUBLICIP.yml; then    mv docker-compose_$PUBLICIP.yml docker-compose_$PUBLICIP_$NSC3REL.old  2> /dev/null
-   fi
-   cp docker-compose.yml docker-compose_$PUBLICIP.yml
-fi
+cp docker-compose.yml docker-compose_$PUBLICIP.yml
+
+
 # Maintenance log
 if ! [ -f "$NSCHOME/logs/nsc-maintenance-log.txt" ]; then 
    touch $NSCHOME/logs/nsc-maintenance-log.txt 2> /dev/null;
