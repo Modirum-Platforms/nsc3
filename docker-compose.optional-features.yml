@@ -1,0 +1,77 @@
+# Optional features:
+# Usage:
+# Start: 
+# sudo docker compose -f docker-compose.yml -f docker-compose.optional-features.yml up -d
+# Stop: 
+# sudo docker compose -f docker-compose.yml -f docker-compose.optional-features.yml down
+services:
+  nsc-notify-service:
+    container_name: nsc-notify-service
+    image: $NSC3REG/dev/nsc-notify-service:$NSC3REL
+    depends_on:
+      dumps-perms:
+        condition: service_completed_successfully
+    logging:
+      driver: "json-file"
+      options: {}
+    networks: 
+      - nsc-network
+    restart: unless-stopped
+    volumes:
+      - dumps:/dumps:rw
+      - /dev/urandom:/dev/random:rw
+    mem_limit: 1024m
+    memswap_limit: 1024m
+    environment:
+      QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
+      QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
+      GC_OPTIONS: >-
+        -XX:+UseZGC
+        -XX:+ZGenerational
+      QUARKUS_PROFILE: prod
+      JAVA_TOOL_OPTIONS: >-
+        -XX:+UseContainerSupport
+        -XX:InitialRAMPercentage=20
+        -XX:MaxRAMPercentage=70
+        -XX:MinRAMPercentage=50
+        -XX:+ExitOnOutOfMemoryError
+        -XX:+HeapDumpOnOutOfMemoryError
+        -XX:HeapDumpPath=/dumps
+        -Xlog:os+container=info
+    working_dir: /root
+  nsc-team-bridge-service:
+    container_name: nsc-team-bridge-service
+    image: $NSC3REG/dev/nsc-team-bridge-service:$NSC3REL
+    depends_on:
+      dumps-perms:
+        condition: service_completed_successfully
+    env_file:
+        - nsc-team-bridge-service-server.env
+        - nsc3.env
+    networks: 
+      - nsc-network
+    ports:
+      - "64660:64660/udp"
+    restart: unless-stopped 
+    volumes:
+      - dumps:/dumps:rw
+      - /dev/urandom:/dev/random:rw
+    mem_limit: 8192m
+    memswap_limit: 8192m
+    environment:
+      QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
+      QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
+      GC_OPTIONS: >-
+        -XX:+UseZGC
+        -XX:+ZGenerational
+      QUARKUS_PROFILE: prod
+      JAVA_TOOL_OPTIONS: >-
+        -XX:+UseContainerSupport
+        -XX:InitialRAMPercentage=20
+        -XX:MaxRAMPercentage=70
+        -XX:MinRAMPercentage=50
+        -XX:+ExitOnOutOfMemoryError
+        -XX:+HeapDumpOnOutOfMemoryError
+        -XX:HeapDumpPath=/dumps
+        -Xlog:os+container=info
+    working_dir: /root
