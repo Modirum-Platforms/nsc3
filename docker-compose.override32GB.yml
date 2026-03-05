@@ -1,0 +1,38 @@
+# docker-compose.override32GB.yml
+# Using overrides in case of 32GB RAM
+#   docker compose -f docker-compose.yml -f docker-compose.override32GB.yml up -d
+
+services:
+  nsc-scheduler-service:
+    mem_limit: 2048m
+    memswap_limit: 2048m
+  nsc-auth-service:
+    mem_limit: 1024m
+    memswap_limit: 1024m
+  nsc-stream-in-service:
+    mem_limit: 16384m
+    memswap_limit: 16384m
+  nsc-stream-in-service-legacy:
+    mem_limit: 16384m
+    memswap_limit: 16384m
+  nsc-live-service:
+    mem_limit: 4096m
+    memswap_limit: 4096m
+  nsc-comms-service:
+    mem_limit: 4096m
+    memswap_limit: 4096m
+  nsc-playback-service:
+    mem_limit: 4096m
+    memswap_limit: 4096m
+  nsc-network-stream-service:
+    mem_limit: 8192m
+    memswap_limit: 8192m
+  nsc-aar-worker:
+    mem_limit: 8192m
+    memswap_limit: 8192m
+  nsc-notify-service:
+    mem_limit: 1024m
+    memswap_limit: 1024m
+  nsc-team-bridge-service:
+    mem_limit: 16384m
+    memswap_limit: 16384m

@@ -309,6 +309,24 @@ Note that release tag format is
     
 ### NSC3 Maintenance
 
+#### Using overrides in case of 16GB -> 32GB RAM vertical scale up.
+
+Default runtime parameters are designed for 16 GB RAM.
+Following override parameters will update settings to reach more optized configuration with 32GB RAM. 
+
+	docker compose -f docker-compose.yml -f docker-compose.override32GB.yml up -d
+
+#### Using overrides in case of adding optional NSC3 features
+
+As example 
+```
+# Start: 
+sudo docker compose -f docker-compose.yml -f docker-compose.optional-features.yml up -d
+```
+```
+# Stop: 
+sudo docker compose -f docker-compose.yml -f docker-compose.optional-features.yml down
+```
 #### Managing NSC3 containers:
 
 Stop NSC3 services:
