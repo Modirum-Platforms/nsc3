@@ -5,6 +5,12 @@ services:
   valor-postgres:
     container_name: valor-postgres
     image: $NSC3REG/dev/valor-postgres:$NSC3REL
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -13,6 +19,12 @@ services:
   nsc-valor-bus:
     container_name: nsc-valor-bus
     image: $NSC3REG/dev/nsc-valor-bus:$NSC3REL
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     runtime: nvidia
     networks: 
       - nsc-network
@@ -24,6 +36,12 @@ services:
   nsc-valor-tasker-service:
     container_name: nsc-valor-tasker-service
     image: $NSC3REG/dev/nsc-valor-tasker-service:$NSC3REL
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     environment:
         - MEMORY="8g"
     networks: 
