@@ -17,7 +17,10 @@ services:
     image: $NSC3REG/dev/main-postgres:$NSC3REL
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -29,7 +32,10 @@ services:
     image: $NSC3REG/dev/bus-redis:$NSC3REL
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -48,7 +54,10 @@ services:
       - dumps:/dumps:rw
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -80,7 +89,10 @@ services:
     memswap_limit: 1024m
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -112,7 +124,10 @@ services:
         condition: service_completed_successfully
     logging:
       driver: "json-file"
-      options: {}    
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"  
     volumes:
       - /dev/urandom:/dev/random:rw
       - $NSCHOME/nsc-gateway-cert:/mnt/cert
@@ -147,7 +162,10 @@ services:
         condition: service_completed_successfully
     logging:
       driver: "json-file"
-      options: {}    
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"   
     volumes:
       - /dev/urandom:/dev/random:rw
       - dumps:/dumps:rw
@@ -181,7 +199,10 @@ services:
         condition: service_completed_successfully
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -216,7 +237,10 @@ services:
     memswap_limit: 1536m
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -250,7 +274,10 @@ services:
     memswap_limit: 1536m
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -282,7 +309,10 @@ services:
     ipc: private
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -315,7 +345,10 @@ services:
         condition: service_completed_successfully
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -346,7 +379,7 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: "20"
+        max-file: "10"
         max-size: "100m"
         mode: "non-blocking"
     networks: 
@@ -358,7 +391,10 @@ services:
     image: $NSC3REG/dev/map-service:$NSC3REL
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -372,7 +408,7 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: "20"
+        max-file: "10"
         max-size: "100m"
         mode: "non-blocking"
     networks: 
@@ -393,7 +429,10 @@ services:
     image: $NSC3REG/dev/nsc-minio:$NSC3REL
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -405,7 +444,10 @@ services:
     image: $NSC3REG/dev/rtmp-server:$NSC3REL
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -416,7 +458,10 @@ services:
     image: $NSC3REG/dev/nsc-webrtc-proxy:$NSC3REL
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -481,7 +526,10 @@ services:
     image: $NSC3REG/main-postgres:$NSC3REL
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -493,7 +541,10 @@ services:
     image: $NSC3REG/bus-redis:$NSC3REL
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -512,7 +563,10 @@ services:
       - dumps:/dumps:rw
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -544,7 +598,10 @@ services:
     memswap_limit: 1024m
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -576,7 +633,10 @@ services:
         condition: service_completed_successfully
     logging:
       driver: "json-file"
-      options: {}    
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"  
     volumes:
       - /dev/urandom:/dev/random:rw
       - $NSCHOME/nsc-gateway-cert:/mnt/cert
@@ -611,7 +671,10 @@ services:
         condition: service_completed_successfully
     logging:
       driver: "json-file"
-      options: {}    
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"  
     volumes:
       - /dev/urandom:/dev/random:rw
       - dumps:/dumps:rw
@@ -645,7 +708,10 @@ services:
         condition: service_completed_successfully
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -680,7 +746,10 @@ services:
     memswap_limit: 1536m
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -714,7 +783,10 @@ services:
     memswap_limit: 1536m
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -746,7 +818,10 @@ services:
     ipc: private
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -779,7 +854,10 @@ services:
         condition: service_completed_successfully
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -810,7 +888,7 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: "20"
+        max-file: "10"
         max-size: "100m"
         mode: "non-blocking"
     networks: 
@@ -822,7 +900,10 @@ services:
     image: $NSC3REG/map-service:$NSC3REL
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -836,7 +917,7 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: "20"
+        max-file: "10"
         max-size: "100m"
         mode: "non-blocking"
     networks: 
@@ -857,7 +938,10 @@ services:
     image: $NSC3REG/nsc-minio:$NSC3REL
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -869,7 +953,10 @@ services:
     image: $NSC3REG/rtmp-server:$NSC3REL
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
@@ -880,7 +967,10 @@ services:
     image: $NSC3REG/nsc-webrtc-proxy:$NSC3REL
     logging:
       driver: "json-file"
-      options: {}
+      options:
+        max-file: "10"
+        max-size: "100m"
+        mode: "non-blocking"
     networks: 
       - nsc-network
     restart: unless-stopped
