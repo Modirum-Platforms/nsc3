@@ -14,7 +14,7 @@ Detailed installation guidance for Ubuntu 20.04 LTS and 22.02 LTS
 
 ## Prerequisites for Valor installation:
 - [x] Minimum HW configuration: 8 CPU cores with GPU, 32 GB RAM, 500GB Free Disk. As reference 1h video clip is consuming around 2GB disk space.
-- [x] Linux operating system, Ubuntu 20.04/22.02 LTS as reference. Following instructions regarding NVIDIA drivers installation are compatible only with Ubuntu 20.04/22.04 LTS.
+- [x] Linux operating system, Ubuntu 24.04 LTS as reference. Following instructions regarding NVIDIA drivers installation are compatible only with Ubuntu 24.04 LTS.
 - [x] The computer or virtual machine is allocated for NSC3 use only.
 - [x] Internet access is available
 - [x] NSC3 backend is installed
