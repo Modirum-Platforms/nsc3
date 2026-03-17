@@ -70,7 +70,7 @@ services:
         - valor-postgres-volume-15:/var/lib/postgresql/data:rw
   nsc-valor-bus:
     container_name: nsc-valor-bus
-    image: $NSC3REG/nsc-valor-bus:valor-bus-clean-install-hotfix
+    image: $NSC3REG/nsc-valor-bus:$NSC3REL
     runtime: nvidia
     networks: 
       - nsc-network
@@ -110,7 +110,7 @@ services:
         - valor-postgres-volume-15:/var/lib/postgresql/data:rw
   nsc-valor-bus:
     container_name: nsc-valor-bus
-    image: $NSC3REG/nsc-valor-bus:valor-bus-clean-install-hotfix
+    image: $NSC3REG/nsc-valor-bus:$NSC3REL
     runtime: nvidia
     networks: 
       - nsc-network
@@ -150,7 +150,7 @@ services:
         - valor-postgres-volume-15:/var/lib/postgresql/data:rw
   nsc-valor-bus:
     container_name: nsc-valor-bus
-    image: $NSC3REG/nsc-valor-bus:valor-bus-clean-install-hotfix
+    image: $NSC3REG/nsc-valor-bus:$NSC3REL
     runtime: nvidia
     networks: 
       - nsc-network
@@ -190,7 +190,7 @@ services:
         - valor-postgres-volume-15:/var/lib/postgresql/data:rw
   nsc-valor-bus:
     container_name: nsc-valor-bus
-    image: $NSC3REG/nsc-valor-bus:valor-bus-clean-install-hotfix
+    image: $NSC3REG/nsc-valor-bus:$NSC3REL
     runtime: nvidia
     networks: 
       - nsc-network
@@ -230,7 +230,7 @@ services:
         - valor-postgres-volume-15:/var/lib/postgresql/data:rw
   nsc-valor-bus:
     container_name: nsc-valor-bus
-    image: $NSC3REG/nsc-valor-bus:valor-bus-clean-install-hotfix
+    image: $NSC3REG/nsc-valor-bus:$NSC3REL
     runtime: nvidia
     networks: 
       - nsc-network
@@ -270,7 +270,7 @@ services:
         - valor-postgres-volume-15:/var/lib/postgresql/data:rw
   nsc-valor-bus:
     container_name: nsc-valor-bus
-    image: $NSC3REG/nsc-valor-bus:valor-bus-clean-install-hotfix
+    image: $NSC3REG/nsc-valor-bus:$NSC3REL
     runtime: nvidia
     networks: 
       - nsc-network
@@ -311,7 +311,7 @@ services:
         - valor-postgres-volume-15:/var/lib/postgresql/data:rw
   nsc-valor-bus:
     container_name: nsc-valor-bus
-    image: $NSC3REG/nsc-valor-bus::valor-bus-clean-install-hotfix
+    image: $NSC3REG/nsc-valor-bus:$NSC3REL
     runtime: nvidia
     networks:
         nsc-network:
