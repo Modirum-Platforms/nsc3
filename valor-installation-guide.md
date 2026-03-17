@@ -34,9 +34,9 @@ Detailed installation guidance for Ubuntu 20.04 LTS and 22.02 LTS
 19.10.2023 Note: It is recommeded to install Ubuntu 20.04 based image for Cloud VM due to limitations with NVIDIA latest drivers.
 01.07.2024 Note: In case of Azure VM Please add the NVIDIA extension. https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/hpccompute-gpu-linux?source=recommendations. 
 
-Ubuntu 20.04/22.04 LTS as reference:
+Ubuntu 24.04 LTS as reference:
 
-To install the NVIDIA Cuda drivers for Ubuntu 20.04/22.04 LTS
+To install the NVIDIA Cuda drivers for Ubuntu 24.04 LTS
 
 1. Update your package cache and get the package updates for your instance.
 ```
@@ -60,27 +60,20 @@ Expected output:
 
 4. Setup Nvida CUDA repository. Execute the following commands to enable CUDA repository.
 
-Ubuntu 20.04 LTS
-```
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
-sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
-sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub
-sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
-```
-Ubuntu 22.04 LTS
-
 If Nvidia cuda has already installed via previous Nvidia repository then please remove the outdated singing key
 
 ```
 sudo apt-key del 7fa2af80
 ```
 
+Ubuntu 24.04 LTS
 ```
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
-sudo mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
-sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub
-sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /"
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin
+sudo mv cuda-ubuntu2404.pin /etc/apt/preferences.d/cuda-repository-pin-600
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/3bf863cc.pub
+sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/ /"
 ```
+
 
 5. Install Nvidia Cuda via apt repository:
 ```
