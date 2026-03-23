@@ -6,7 +6,7 @@ do
   # process the organisation
   ORG_ID=$(echo $org_line | awk  -F ',' '{ print $1 }')
   ORG_NAME=$(echo $org_line | awk  -F ',' '{ print $2 }')
-  TEMP=$(echo "docker exec main-postgres psql -U nsc -d maindatabase -t -A -F"," -c" '"SELECT nickname, deviceid FROM ''\"'$ORG_ID'\"''.devices WHERE state = 1 AND virtual = false;"'"")
+  TEMP=$(echo "docker exec main-postgres psql -U nsc -d maindatabase -t -A -F"," -c" '"SELECT nickname, device_id FROM ''\"'$ORG_ID'\"''.devices WHERE state = 1 AND is_virtual = false;"'"")
   TEMP_DEV=$(bash -c "$TEMP")
   while IFS2= read -r device_line
   do
