@@ -494,7 +494,20 @@ curl --cert-status -v https://$PUBLICIP 2>&1 | awk 'BEGIN { cert=0 } /^\* Server
 ######  Cert files location:
 
 	$HOME/nsc3/nsc-gateway-cert
+
+
+###### Check privatekey
 	
+```
+openssl pkey -in privkey.pem -text -noout
+
+```
+
+This will printout type of cert
+- RSA
+- EC / ECDSA
+- Ed25519
+- DSA
 
 ###### Check that privkey.pem first line looks as below 
 
