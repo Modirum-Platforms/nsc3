@@ -574,6 +574,17 @@ E.g if you have changed SSL cert files then nsc-gateway-service requires restart
 sudo docker compose restart nsc-gateway
 ```
 
+###### How to verify that service cert inside and outside is valid, example port 443
+
+```
+openssl s_client \
+  -connect 127.0.0.1:443 \
+  -servername domain.com \
+  -verify_hostname domain.com \
+  -verify_return_error
+```
+
+
 ##### Check TCP IP route from external network to NSC3 https port:
 
 This requires extra tool called nmap:
