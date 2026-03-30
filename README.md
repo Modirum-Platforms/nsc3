@@ -505,9 +505,30 @@ openssl pkey -in privkey.pem -text -noout
 
 This will printout type of cert
 - RSA
-- EC / ECDSA
+- EC/ECDSA
 - Ed25519
 - DSA
+
+Get rid of privatekey password (private.key as original example)
+
+```
+openssl pkey -in private.key -out private-nopass.pem
+```
+
+Convert DER-format EC-key → PEM (private.key as original example)
+
+```
+openssl ec -in private.key -inform DER -out private.pem -outform PEM
+```
+
+Convert EC private key → PEM text format (private.key as original example)
+
+```
+openssl ec -in private.key -out private.pem -outform PEM
+```
+
+
+
 
 ###### Check that privkey.pem first line looks as below 
 
