@@ -48,8 +48,8 @@ if grep -q $NSC3REL $NSCHOME/valor-docker-compose-ext-reg.tmpl; then
    echo "$NSC3REL tag found from docker-compose template" 
    RELEASETAG=$NSC3REL
    else    
-   echo "Release tag: $NSC3REL is missing. Using release tag: latest as runtime parameters configuration" 
-   RELEASETAG="latest"
+   echo "Release tag: $NSC3REL is missing. Using release tag: rc as runtime parameters configuration" 
+   RELEASETAG="rc"
 fi
 # Move old files
 if [ -f "docker-compose-valor.yml" ]; then
