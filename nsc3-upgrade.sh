@@ -132,7 +132,8 @@ sudo $DOCKERCOMPOSECOMMAND up -d
 sleep 5
 export MINIOSECRET=$(sudo docker inspect nsc-minio | grep MINIO_ROOT_PASSWORD= | awk '{print $1}' | sed s/MINIO_ROOT_PASSWORD=// | sed -e 's/[""]//g') 2> /dev/null
 sed -i 's/.*MINIO_SECRET_KEY=*.*/      - MINIO_SECRET_KEY='"$MINIOSECRET"'/' $NSCHOME/docker-compose.yml;
-sudo $DOCKERCOMPOSECOMMAND up -d
+sudo $DOCKERCOMPOSECOMMAND down nsc-webrtc-proxy
+sudo $DOCKERCOMPOSECOMMAND up -d nsc-webrtc-proxy
 ## Configure stream-in service
 if [ -z "$TEAM_BRIDGE_ENABLED" ]; then
    sed -i 's/.*NSC3_STREAM_IN_SERVICE_TEAM_BRIDGE_ENABLED*.*/      - NSC3_STREAM_IN_SERVICE_TEAM_BRIDGE_ENABLED=true/' $NSCHOME/docker-compose.yml;
