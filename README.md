@@ -372,10 +372,10 @@ Naming rule:
 - privatekey: privkey.pem
 - SSL cert: fullchain.pem
 
-E.g if you have changed SSL cert files then nsc-gateway-service and nsc-stream-in-service  require restarting in order to take into use a new cert file.
+E.g if you have changed SSL cert files then nsc-gateway-service requires restarting in order to take into use a new cert file.
 
 ```
-sudo docker compose restart nsc-gateway nsc-stream-in-service
+sudo docker compose restart nsc-gateway
 ```
 
 #### Relocating the Docker root directory
