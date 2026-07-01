@@ -227,8 +227,8 @@ services:
     depends_on:
       dumps-perms:
         condition: service_completed_successfully
-    mem_limit: 1536m
-    memswap_limit: 1536m
+    mem_limit: 4096m
+    memswap_limit: 4096m
     logging:
       driver: "json-file"
       options:
@@ -733,8 +733,8 @@ services:
     depends_on:
       dumps-perms:
         condition: service_completed_successfully
-    mem_limit: 1536m
-    memswap_limit: 1536m
+    mem_limit: 4096m
+    memswap_limit: 4096m
     logging:
       driver: "json-file"
       options:
