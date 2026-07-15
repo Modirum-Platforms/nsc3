@@ -67,8 +67,8 @@ if test -f docker-compose-valor_$PUBLICIP.yml; then
 fi
 cp docker-compose-valor.yml docker-compose-valor_$PUBLICIP.yml
 echo "Upgrading docker images ..."
-sudo docker-compose -f docker-compose-valor.yml pull
-sudo docker-compose -f docker-compose-valor.yml up -d
+sudo docker compose -f docker-compose-valor.yml pull
+sudo docker compose -f docker-compose-valor.yml up -d
 echo "++++++++++++++++++++++++++++++++++++++++"
 echo ""                                        
 echo "Valor is upgraded to release $NSC3REL!"
