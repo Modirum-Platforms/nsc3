@@ -27,9 +27,9 @@ services:
     volumes:
       - main-postgres-pg15-volume:/var/lib/postgresql/data:rw
     working_dir: /root
-  bus-redis:
-    container_name: bus-redis
-    image: $NSC3REG/dev/bus-redis:$NSC3REL
+  bus-valkey:
+    container_name: bus-valkey
+    image: $NSC3REG/dev/bus-valkey:$NSC3REL
     logging:
       driver: "json-file"
       options:
@@ -434,7 +434,7 @@ services:
       - MINIO_PORT=9000
       - MINIO_ACCESS_KEY=minioclient
       - MINIO_SECRET_KEY=$MINIOSECRET
-      - REDIS_ENDPOINT=bus-redis
+      - REDIS_ENDPOINT=bus-valkey
       - REDIS_PORT=6379
   dumps-perms:
     image: $NSC3REG/dev/nsc-scheduler-service:$NSC3REL   # tai joku muu teidän image
@@ -455,8 +455,8 @@ networks:
 volumes:
   main-postgres-pg15-volume:
     name: main-postgres-pg15-volume
-  bus-redis-volume:
-    name: bus-redis-volume
+  bus-valkey-volume:
+    name: bus-valkey-volume
   minio-volume:
     name: minio-volume
   dumps: {} 
