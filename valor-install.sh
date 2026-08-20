@@ -121,6 +121,7 @@ cp docker-compose-valor.yml docker-compose-valor_$PUBLICIP.yml
 echo "docker-compose-valor.yml file is created..."
 echo "Downloading docker images ..."
 sudo docker-compose -f docker-compose-valor.yml up -d
+sudo docker restart nsc-scheduler-service
 echo "*********************************************************"
 echo ""                                        
 echo "NSC3 backend with Valor version $NSC3REL is installed!"

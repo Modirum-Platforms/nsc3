@@ -252,11 +252,6 @@ Via delivered tar file:
     https://foo.modirumplatforms.com
     ++++++++++++++++++++++++++++++++++++++++
     
-#### Initialize the Valor database
-
-```
-sudo docker restart nsc-scheduler-service
-```
 
 Valor installation is now completed!
 
