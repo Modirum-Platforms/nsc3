@@ -1,9 +1,9 @@
 # Valor Installation guidance
 ## Project description:
 Valor installation guidance and scripts for single node server configuration.
-Detailed installation guidance for Ubuntu 20.04 LTS and 22.02 LTS
+Detailed installation guidance for Ubuntu 24.04 LTS
 
-    Release Tag: release-4.4.2
+    Release Tag: release-4.5.3
 
 ## Project structure:
 
@@ -218,15 +218,16 @@ Via delivered tar file:
     +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     Valor installer usage:
 
-    sudo ./valor-install.sh --help 	  	'help text'
-    sudo ./valor-install.sh --silent     'installation with command line parameters'
-    sudo ./valor-install.sh 		  		'interactive installation mode'
+    sudo ./valor-install.sh --help    'help text'
+    sudo ./valor-install.sh --silent      'installation with command line parameters'
+    sudo ./valor-install.sh                   'interactive installation mode'
 
     CLI parameters usage:
-    sudo ./valor-install.sh --silent <NSC3 release tag>
+    sudo ./valor-install.sh --silent <Valor release tag> <HW layout> [face detection true/false] [object detection true/false]
 
     CLI parameters example:
-    sudo ./valor-install.sh --silent release-4.4.2
+    sudo ./valor-install.sh --silent release-4.5.3 gpu true true
+
     +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -235,15 +236,16 @@ Via delivered tar file:
     cd $HOME/nsc3
     sudo ./valor-install.sh  
     
-
     ++++++++++++++++++++++++++++++++++++++++
 
       Valor docker-compose installer:       
       This script prepares Valor config     
 
     ++++++++++++++++++++++++++++++++++++++++
-    Valor Release tag, e.g release-4.4.2: 
-    latest  
+    Valor Release tag, e.g release-4.5.3: 
+    release-4.5.3
+    Install face detection? (y/n): n
+    Install object detection? (y/n): n
     ++++++++++++++++++++++++++++++++++++++++
     Valor backend is installed!
     Login to your NSC3 web app by URL address
@@ -317,7 +319,7 @@ Start upgrade process:
     
 Note that release tag format is 
     
-    release-<release number>, e.g: release-4.4.2
+    release-<release number>, e.g: release-4.5.3
     
 ### Valor maintenance
 
@@ -350,7 +352,7 @@ Container status:
     
 ### Valor troubleshooting
 
-#### Valor services does not working properly:
+#### Valor services not working properly:
 
 Try to restart Valor services:
 
@@ -404,76 +406,3 @@ Identify that processes PID is pointing to the redis-server process
 Example printout:
 
 	root      194341  194316  0 Feb24 ?        00:59:39 /usr/local/bin/redis-server *:6379
-	
-### Valor add-ons
-
-#### Face comparison
-Release 4.4.2 as example
-
-1. Loading image
-
-Via the container registry:
-```
-sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-face-comparison-service:release-4.4.2
-```
-
-Via delivered tar file:
-- Move the delivered tar file to the NSC3 machine's $HOME folder
-- Load the images:
-
-```
-    cd $HOME
-    docker load -i <PROVIDED_FACE_COMPARISON_TAR_FILE>
-```
-
-Note the tag that image gets when loaded
-
-2. Make a directory for face samples
-    - Here for example purposes inside /home/exampleuser
-    - `cd /home/exampleuser`
-    - `mkdir -p demodata/faces`
-    - Put face samples here as jpg-files. Note that filenames will be used as detection names
-
-3. Running container
-    - Use the tag that image got when loaded; here as an example :release-4.4.2 . Use actual path in volume mount parameter (-v)
-
-```
-sudo docker run -d -v /home/exampleuser/demodata/faces:/data/wanted_faces --net nsc-network --restart unless-stopped --name nsc-recipe-face-comparison-service modirumplatforms.azurecr.io/nsc-recipe-face-comparison-service:release-4.4.2
-```
-
-#### Object detection
-
-1. Loading images
-
-Via the container registry:
-```
-sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-object-detection-service:release-4.4.2
-```
-
-```
-sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-object-detection-service-onnx:release-4.4.2
-```	
-
-Via delivered tar files:
-- Move the delivered tar files to the NSC3 machine's $HOME folder
-- Load the images:
-
-```
-    cd $HOME
-    docker load -i <PROVIDED_OBJECT_DETECTION_TAR_FILE>
-    docker load -i <PROVIDED_OBJECT_DETECTION_ONNX_TAR_FILE>
-```
-
-Note the tags that images get when loaded.
-
-2. Running containers
-Use the tag that images got when loaded; here as an example :release-4.4.2
-
-```
-sudo docker run -d --net nsc-network -e "NVIDIA_VISIBLE_DEVICES=all" -e "NVIDIA_DRIVER_CAPABILITIES=all" --runtime=nvidia --restart unless-stopped --name nsc-recipe-object-detection-service-onnx modirumplatforms.azurecr.io/nsc-recipe-object-detection-service-onnx:release-4.4.2
-```
-
-```
-sudo docker run -d --net nsc-network --restart unless-stopped --name nsc-recipe-object-detection-service modirumplatforms.azurecr.io/nsc-recipe-object-detection-service:release-4.4.2
-```
-
