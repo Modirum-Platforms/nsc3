@@ -46,6 +46,38 @@ services:
         - MEMORY="8g"
     networks: 
       - nsc-network
+    depends_on:
+        - "nsc-valor-bus"
+  nsc-recipe-face-comparison-service:
+    container_name: nsc-recipe-face-comparison-service
+    image: $NSC3REG/dev/nsc-recipe-face-comparison-service:$NSC3REL
+    networks:
+      - nsc-network
+    depends_on:
+      - "nsc-valor-tasker-service"
+    restart: unless-stopped
+    volumes:
+      - $NSCHOME/faces:/data/wanted_faces
+  nsc-recipe-object-detection-service-onnx:
+    container_name: nsc-recipe-object-detection-service-onnx
+    image: $NSC3REG/dev/nsc-recipe-object-detection-service-onnx:$NSC3REL
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    runtime: nvidia
+    networks:
+      - nsc-network
+    depends_on:
+      - "nsc-valor-tasker-service"
+    restart: unless-stopped
+  nsc-recipe-object-detection-service:
+    container_name: nsc-recipe-object-detection-service
+    image: $NSC3REG/dev/nsc-recipe-object-detection-service:$NSC3REL
+    networks:
+      - nsc-network
+    depends_on:
+      - "nsc-recipe-object-detection-service-onnx"
+    restart: unless-stopped
 volumes:
   valor-postgres-volume-15:
     name: valor-postgres-volume-15
@@ -86,6 +118,38 @@ services:
         - MEMORY="8g"
     networks: 
       - nsc-network
+    depends_on:
+        - "nsc-valor-bus"
+  nsc-recipe-face-comparison-service:
+    container_name: nsc-recipe-face-comparison-service
+    image: $NSC3REG/dev/nsc-recipe-face-comparison-service:$NSC3REL
+    networks:
+      - nsc-network
+    depends_on:
+      - "nsc-valor-tasker-service"
+    restart: unless-stopped
+    volumes:
+      - $NSCHOME/faces:/data/wanted_faces
+  nsc-recipe-object-detection-service-onnx:
+    container_name: nsc-recipe-object-detection-service-onnx
+    image: $NSC3REG/dev/nsc-recipe-object-detection-service-onnx:$NSC3REL
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    runtime: nvidia
+    networks:
+      - nsc-network
+    depends_on:
+      - "nsc-valor-tasker-service"
+    restart: unless-stopped
+  nsc-recipe-object-detection-service:
+    container_name: nsc-recipe-object-detection-service
+    image: $NSC3REG/dev/nsc-recipe-object-detection-service:$NSC3REL
+    networks:
+      - nsc-network
+    depends_on:
+      - "nsc-recipe-object-detection-service-onnx"
+    restart: unless-stopped
 volumes:
   valor-postgres-volume-15:
     name: valor-postgres-volume-15
