@@ -51,9 +51,7 @@ if [ ${1+"true"} ]; then
        echo "sudo ./valor-install.sh --silent <Valor release tag> <HW layout> [face detection true/false] [object detection true/false]"
        echo ""
        echo "CLI parameters example:"
-       echo "sudo ./valor-install.sh --silent release-4.4.2 gpu true true"
-       echo ""
-       echo "sudo ./valor-install.sh --silent release-4.4.2"
+       echo "sudo ./valor-install.sh --silent release-4.5.3 gpu true true"
        echo ""
        echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
        exit 0
