@@ -22,7 +22,7 @@ NOTE: All the instructions are for release-4.4.2 and later. If there is a need t
 ## Prerequisites for NSC3 installation:
 - [x] Minimum HW configuration: 8 CPU cores, 16GB RAM, 500GB Free Disk. As reference 1h video clip is consuming around 2GB disk space.
       Recommended 16 CPU cores, 32GB RAM to managed more than 50 simultaneous video sources.
-- [x] Linux operating system (Latest Ubuntu LTS as recommended OS)
+- [x] Linux operating system (Ubuntu 22.04 LTS as recommended OS)
 - [x] The computer or virtual machine is allocated for NSC3 use only.
 - [x] Internet access is available
 - [x] Following TCP/IP4 ports are open from network to server:

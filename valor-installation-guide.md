@@ -1,7 +1,7 @@
 # Valor Installation guidance
 ## Project description:
 Valor installation guidance and scripts for single node server configuration.
-Detailed installation guidance for Ubuntu 24.04 LTS
+Detailed installation guidance for Ubuntu 22.04 LTS
 
     Release Tag: release-4.5.3
 
@@ -14,7 +14,7 @@ Detailed installation guidance for Ubuntu 24.04 LTS
 
 ## Prerequisites for Valor installation:
 - [x] Minimum HW configuration: 8 CPU cores with GPU, 32 GB RAM, 500GB Free Disk. As reference 1h video clip is consuming around 2GB disk space.
-- [x] Linux operating system, Ubuntu 24.04 LTS as reference. Following instructions regarding NVIDIA drivers installation are compatible only with Ubuntu 24.04 LTS.
+- [x] Linux operating system, Ubuntu 22.04 LTS as reference. Following instructions regarding NVIDIA drivers installation are compatible only with Ubuntu 22.04 LTS.
 - [x] The computer or virtual machine is allocated for NSC3 use only.
 - [x] Internet access is available
 - [x] NSC3 backend is installed
@@ -31,12 +31,11 @@ Detailed installation guidance for Ubuntu 24.04 LTS
 
 ## Install GPU drivers to host VM
 
-19.10.2023 Note: It is recommeded to install Ubuntu 20.04 based image for Cloud VM due to limitations with NVIDIA latest drivers.
 01.07.2024 Note: In case of Azure VM Please add the NVIDIA extension. https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/hpccompute-gpu-linux?source=recommendations. 
 
-Ubuntu 24.04 LTS as reference:
+Ubuntu 22.04 LTS as reference:
 
-To install the NVIDIA Cuda drivers for Ubuntu 24.04 LTS
+To install the NVIDIA Cuda drivers for Ubuntu 22.04 LTS
 
 1. Update your package cache and get the package updates for your instance.
 ```
@@ -66,12 +65,12 @@ If Nvidia cuda has already installed via previous Nvidia repository then please 
 sudo apt-key del 7fa2af80
 ```
 
-Ubuntu 24.04 LTS
+Ubuntu 22.04 LTS
 ```
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin
-sudo mv cuda-ubuntu2404.pin /etc/apt/preferences.d/cuda-repository-pin-600
-sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/3bf863cc.pub
-sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/ /"
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
+sudo mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub
+sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /"
 ```
 
 
