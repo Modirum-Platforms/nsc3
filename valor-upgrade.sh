@@ -3,6 +3,32 @@
 export NSC3REG="modirumplatforms.azurecr.io"
 source ./nsc-host.env
 silentmode=false
+FACE_DETECTION_ENABLED=false
+OBJECT_DETECTION_ENABLED=false
+
+compose_has_service() {
+    local compose_file=$1
+    local service_name=$2
+
+    awk -v service_name="$service_name" '
+        { sub(/\r$/, "") }
+        $0 == "  " service_name ":" { found = 1 }
+        END { exit !found }
+    ' "$compose_file"
+}
+
+remove_compose_service() {
+    local compose_file=$1
+    local service_name=$2
+    local temp_file="${compose_file}.tmp"
+
+    awk -v service_name="$service_name" '
+        $0 == "  " service_name ":" { skipping = 1; next }
+        skipping && ($0 ~ /^  [^ ]/ || $0 ~ /^[^ ]/) { skipping = 0 }
+        !skipping { print }
+    ' "$compose_file" > "$temp_file" && mv "$temp_file" "$compose_file"
+}
+
 if [ ${1+"true"} ]; then
    if  [ $1 == "--silent" ]; then
        silentmode=true
@@ -21,7 +47,7 @@ if [ ${1+"true"} ]; then
        echo "./valor-upgrade.sh --silent <NSC3 release tag>"
        echo ""
        echo "CLI parameters example:"
-       echo "./valor-upgrade.sh --silent release-4.4.2"
+       echo "./valor-upgrade.sh --silent release-4.5.3"
        echo ""
        echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
        exit 0
@@ -38,7 +64,7 @@ if [ "$silentmode" = false ]; then
     echo "  This script is upgrading NSC3 system  "
     echo "                                        "
     echo "++++++++++++++++++++++++++++++++++++++++"
-    echo "New NSC3 Release tag for upgrading, e.g release-4.4.2: " 
+    echo "New NSC3 Release tag for upgrading, e.g release-4.5.3: "
     read REL
     export NSC3REL=$REL
 fi
@@ -53,6 +79,12 @@ if grep -q $NSC3REL $NSCHOME/valor-docker-compose-ext-reg.tmpl; then
 fi
 # Move old files
 if [ -f "docker-compose-valor.yml" ]; then
+   if compose_has_service docker-compose-valor.yml nsc-recipe-face-comparison-service; then
+       FACE_DETECTION_ENABLED=true
+   fi
+   if compose_has_service docker-compose-valor.yml nsc-recipe-object-detection-service; then
+       OBJECT_DETECTION_ENABLED=true
+   fi
    mv docker-compose-valor.yml docker-compose-valor-$NSC3REL.old 2> /dev/null
 fi
 (echo "cat <<EOF >docker-compose-valor-temp.yml";
@@ -61,6 +93,13 @@ cat valor-docker-compose-ext-reg.tmpl | sed -n '/'"$RELEASETAG"'/,/'"$RELEASETAG
 . temp.yml 2> /dev/null
 cat docker-compose-valor-temp.yml > docker-compose-valor.yml;
 rm -f temp.yml docker-compose-valor-temp.yml 2> /dev/null
+if [ "$FACE_DETECTION_ENABLED" != true ]; then
+    remove_compose_service docker-compose-valor.yml nsc-recipe-face-comparison-service
+fi
+if [ "$OBJECT_DETECTION_ENABLED" != true ]; then
+    remove_compose_service docker-compose-valor.yml nsc-recipe-object-detection-service-onnx
+    remove_compose_service docker-compose-valor.yml nsc-recipe-object-detection-service
+fi
 # Archive env specific file to system
 if test -f docker-compose-valor_$PUBLICIP.yml; then
     mv docker-compose-valor_$PUBLICIP.yml docker-compose-valor_$PUBLICIP.old  2> /dev/null

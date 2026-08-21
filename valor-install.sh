@@ -4,6 +4,35 @@ export NSC3REG="modirumplatforms.azurecr.io"
 export REDISAI_DEVICE="gpu"
 source ./nsc-host.env
 silentmode=false
+FACE_DETECTION_ENABLED=${FACE_DETECTION_ENABLED:-false}
+OBJECT_DETECTION_ENABLED=${OBJECT_DETECTION_ENABLED:-false}
+
+ask_to_install() {
+    local prompt=$1
+    local answer
+
+    while true; do
+        read -p "$prompt (y/n): " answer
+        case $answer in
+            [Yy]) return 0 ;;
+            [Nn]) return 1 ;;
+            *) echo "Please answer y or n." ;;
+        esac
+    done
+}
+
+remove_compose_service() {
+    local compose_file=$1
+    local service_name=$2
+    local temp_file="${compose_file}.tmp"
+
+    awk -v service_name="$service_name" '
+        $0 == "  " service_name ":" { skipping = 1; next }
+        skipping && ($0 ~ /^  [^ ]/ || $0 ~ /^[^ ]/) { skipping = 0 }
+        !skipping { print }
+    ' "$compose_file" > "$temp_file" && mv "$temp_file" "$compose_file"
+}
+
 if [ ${1+"true"} ]; then
    if  [ $1 == "--silent" ]; then
        silentmode=true
@@ -19,12 +48,10 @@ if [ ${1+"true"} ]; then
        echo "sudo ./valor-install.sh 		  'interactive installation mode'"
        echo ""
        echo "CLI parameters usage:"
-       echo "sudo ./valor-install.sh --silent <Valor release tag> <HW layout>"
+       echo "sudo ./valor-install.sh --silent <Valor release tag> <HW layout> [face detection true/false] [object detection true/false]"
        echo ""
        echo "CLI parameters example:"
-       echo "sudo ./valor-install.sh --silent release-4.4.2 cpu"
-       echo ""
-       echo "sudo ./valor-install.sh --silent release-4.4.2"
+       echo "sudo ./valor-install.sh --silent release-4.5.3 gpu true true"
        echo ""
        echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
        exit 0
@@ -32,8 +59,14 @@ if [ ${1+"true"} ]; then
    if [ ${2+"true"} ]; then
        export NSC3REL=$2
    fi
-   if [ ${2+"true"} ]; then
+   if [ ${3+"true"} ]; then
        export REDISAI_DEVICE=$3
+   fi
+   if [ ${4+"true"} ]; then
+       FACE_DETECTION_ENABLED=$4
+   fi
+   if [ ${5+"true"} ]; then
+       OBJECT_DETECTION_ENABLED=$5
    fi
 fi
 if [ "$silentmode" = false ]; then
@@ -47,6 +80,12 @@ if [ "$silentmode" = false ]; then
     echo "Valor Release tag, e.g release-4.4.2: "
     read REL
     export NSC3REL=$REL
+    if ask_to_install "Install face detection?"; then
+        FACE_DETECTION_ENABLED=true
+    fi
+    if ask_to_install "Install object detection?"; then
+        OBJECT_DETECTION_ENABLED=true
+    fi
 fi
 echo "export REDISAI_DEVICE=$REDISAI_DEVICE" >> $NSCHOME/nsc-host.env
 # Check values
@@ -67,6 +106,13 @@ cat valor-docker-compose-ext-reg.tmpl | sed -n '/'"$RELEASETAG"'/,/'"$RELEASETAG
 . temp.yml 2> /dev/null
 cat docker-compose-valor-temp.yml > docker-compose-valor.yml;
 rm -f temp.yml docker-compose-valor-temp.yml 2> /dev/null
+if [ "$FACE_DETECTION_ENABLED" != true ]; then
+    remove_compose_service docker-compose-valor.yml nsc-recipe-face-comparison-service
+fi
+if [ "$OBJECT_DETECTION_ENABLED" != true ]; then
+    remove_compose_service docker-compose-valor.yml nsc-recipe-object-detection-service-onnx
+    remove_compose_service docker-compose-valor.yml nsc-recipe-object-detection-service
+fi
 # Archive env specific file to system
 if test -f docker-compose-valor_$PUBLICIP.yml; then
     mv docker-compose-valor_$PUBLICIP.yml docker-compose-valor_$PUBLICIP.old  2> /dev/null
@@ -75,6 +121,7 @@ cp docker-compose-valor.yml docker-compose-valor_$PUBLICIP.yml
 echo "docker-compose-valor.yml file is created..."
 echo "Downloading docker images ..."
 sudo docker-compose -f docker-compose-valor.yml up -d
+sudo docker restart nsc-scheduler-service
 echo "*********************************************************"
 echo ""                                        
 echo "NSC3 backend with Valor version $NSC3REL is installed!"

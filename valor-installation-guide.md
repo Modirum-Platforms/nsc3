@@ -1,9 +1,9 @@
 # Valor Installation guidance
 ## Project description:
 Valor installation guidance and scripts for single node server configuration.
-Detailed installation guidance for Ubuntu 20.04 LTS and 22.02 LTS
+Detailed installation guidance for Ubuntu 22.04 LTS
 
-    Release Tag: release-4.4.2
+    Release Tag: release-4.5.3
 
 ## Project structure:
 
@@ -14,7 +14,7 @@ Detailed installation guidance for Ubuntu 20.04 LTS and 22.02 LTS
 
 ## Prerequisites for Valor installation:
 - [x] Minimum HW configuration: 8 CPU cores with GPU, 32 GB RAM, 500GB Free Disk. As reference 1h video clip is consuming around 2GB disk space.
-- [x] Linux operating system, Ubuntu 24.04 LTS as reference. Following instructions regarding NVIDIA drivers installation are compatible only with Ubuntu 24.04 LTS.
+- [x] Linux operating system, Ubuntu 22.04 LTS as reference. Following instructions regarding NVIDIA drivers installation are compatible only with Ubuntu 22.04 LTS.
 - [x] The computer or virtual machine is allocated for NSC3 use only.
 - [x] Internet access is available
 - [x] NSC3 backend is installed
@@ -31,12 +31,11 @@ Detailed installation guidance for Ubuntu 20.04 LTS and 22.02 LTS
 
 ## Install GPU drivers to host VM
 
-19.10.2023 Note: It is recommeded to install Ubuntu 20.04 based image for Cloud VM due to limitations with NVIDIA latest drivers.
 01.07.2024 Note: In case of Azure VM Please add the NVIDIA extension. https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/hpccompute-gpu-linux?source=recommendations. 
 
-Ubuntu 24.04 LTS as reference:
+Ubuntu 22.04 LTS as reference:
 
-To install the NVIDIA Cuda drivers for Ubuntu 24.04 LTS
+To install the NVIDIA Cuda drivers for Ubuntu 22.04 LTS
 
 1. Update your package cache and get the package updates for your instance.
 ```
@@ -66,12 +65,12 @@ If Nvidia cuda has already installed via previous Nvidia repository then please 
 sudo apt-key del 7fa2af80
 ```
 
-Ubuntu 24.04 LTS
+Ubuntu 22.04 LTS
 ```
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin
-sudo mv cuda-ubuntu2404.pin /etc/apt/preferences.d/cuda-repository-pin-600
-sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/3bf863cc.pub
-sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/ /"
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
+sudo mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub
+sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /"
 ```
 
 
@@ -218,15 +217,16 @@ Via delivered tar file:
     +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     Valor installer usage:
 
-    sudo ./valor-install.sh --help 	  	'help text'
-    sudo ./valor-install.sh --silent     'installation with command line parameters'
-    sudo ./valor-install.sh 		  		'interactive installation mode'
+    sudo ./valor-install.sh --help    'help text'
+    sudo ./valor-install.sh --silent      'installation with command line parameters'
+    sudo ./valor-install.sh                   'interactive installation mode'
 
     CLI parameters usage:
-    sudo ./valor-install.sh --silent <NSC3 release tag>
+    sudo ./valor-install.sh --silent <Valor release tag> <HW layout> [face detection true/false] [object detection true/false]
 
     CLI parameters example:
-    sudo ./valor-install.sh --silent release-4.4.2
+    sudo ./valor-install.sh --silent release-4.5.3 gpu true true
+
     +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -235,26 +235,22 @@ Via delivered tar file:
     cd $HOME/nsc3
     sudo ./valor-install.sh  
     
-
     ++++++++++++++++++++++++++++++++++++++++
 
       Valor docker-compose installer:       
       This script prepares Valor config     
 
     ++++++++++++++++++++++++++++++++++++++++
-    Valor Release tag, e.g release-4.4.2: 
-    latest  
+    Valor Release tag, e.g release-4.5.3: 
+    release-4.5.3
+    Install face detection? (y/n): n
+    Install object detection? (y/n): n
     ++++++++++++++++++++++++++++++++++++++++
     Valor backend is installed!
     Login to your NSC3 web app by URL address
     https://foo.modirumplatforms.com
     ++++++++++++++++++++++++++++++++++++++++
     
-#### Initialize the Valor database
-
-```
-sudo docker restart nsc-scheduler-service
-```
 
 Valor installation is now completed!
 
@@ -317,7 +313,7 @@ Start upgrade process:
     
 Note that release tag format is 
     
-    release-<release number>, e.g: release-4.4.2
+    release-<release number>, e.g: release-4.5.3
     
 ### Valor maintenance
 
@@ -350,7 +346,7 @@ Container status:
     
 ### Valor troubleshooting
 
-#### Valor services does not working properly:
+#### Valor services not working properly:
 
 Try to restart Valor services:
 
@@ -404,76 +400,3 @@ Identify that processes PID is pointing to the redis-server process
 Example printout:
 
 	root      194341  194316  0 Feb24 ?        00:59:39 /usr/local/bin/redis-server *:6379
-	
-### Valor add-ons
-
-#### Face comparison
-Release 4.4.2 as example
-
-1. Loading image
-
-Via the container registry:
-```
-sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-face-comparison-service:release-4.4.2
-```
-
-Via delivered tar file:
-- Move the delivered tar file to the NSC3 machine's $HOME folder
-- Load the images:
-
-```
-    cd $HOME
-    docker load -i <PROVIDED_FACE_COMPARISON_TAR_FILE>
-```
-
-Note the tag that image gets when loaded
-
-2. Make a directory for face samples
-    - Here for example purposes inside /home/exampleuser
-    - `cd /home/exampleuser`
-    - `mkdir -p demodata/faces`
-    - Put face samples here as jpg-files. Note that filenames will be used as detection names
-
-3. Running container
-    - Use the tag that image got when loaded; here as an example :release-4.4.2 . Use actual path in volume mount parameter (-v)
-
-```
-sudo docker run -d -v /home/exampleuser/demodata/faces:/data/wanted_faces --net nsc-network --restart unless-stopped --name nsc-recipe-face-comparison-service modirumplatforms.azurecr.io/nsc-recipe-face-comparison-service:release-4.4.2
-```
-
-#### Object detection
-
-1. Loading images
-
-Via the container registry:
-```
-sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-object-detection-service:release-4.4.2
-```
-
-```
-sudo docker pull modirumplatforms.azurecr.io/nsc-recipe-object-detection-service-onnx:release-4.4.2
-```	
-
-Via delivered tar files:
-- Move the delivered tar files to the NSC3 machine's $HOME folder
-- Load the images:
-
-```
-    cd $HOME
-    docker load -i <PROVIDED_OBJECT_DETECTION_TAR_FILE>
-    docker load -i <PROVIDED_OBJECT_DETECTION_ONNX_TAR_FILE>
-```
-
-Note the tags that images get when loaded.
-
-2. Running containers
-Use the tag that images got when loaded; here as an example :release-4.4.2
-
-```
-sudo docker run -d --net nsc-network -e "NVIDIA_VISIBLE_DEVICES=all" -e "NVIDIA_DRIVER_CAPABILITIES=all" --runtime=nvidia --restart unless-stopped --name nsc-recipe-object-detection-service-onnx modirumplatforms.azurecr.io/nsc-recipe-object-detection-service-onnx:release-4.4.2
-```
-
-```
-sudo docker run -d --net nsc-network --restart unless-stopped --name nsc-recipe-object-detection-service modirumplatforms.azurecr.io/nsc-recipe-object-detection-service:release-4.4.2
-```
-

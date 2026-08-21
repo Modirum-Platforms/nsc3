@@ -2,9 +2,9 @@
 ## Project description:
 NSC3 backend installation guides and scripts for single node server configuration
 
-    Release Tag of latest release: release-4.4.2
+    Release Tag of latest release: release-4.5.3
 
-NOTE: All the instructions are for release-4.4.2 and later. If there is a need to install an older version plese reach out to Modirum Platforms
+NOTE: All the instructions are for release-4.5.3 and later. If there is a need to install an older version please reach out to Modirum Platforms
 
 ## Project structure:
 - README.md: General guidance for this repository. NSC3 installation, upgrade and maintenance instructions.
@@ -22,7 +22,7 @@ NOTE: All the instructions are for release-4.4.2 and later. If there is a need t
 ## Prerequisites for NSC3 installation:
 - [x] Minimum HW configuration: 8 CPU cores, 16GB RAM, 500GB Free Disk. As reference 1h video clip is consuming around 2GB disk space.
       Recommended 16 CPU cores, 32GB RAM to managed more than 50 simultaneous video sources.
-- [x] Linux operating system (Latest Ubuntu LTS as recommended OS)
+- [x] Linux operating system (Ubuntu 22.04 LTS as recommended OS)
 - [x] The computer or virtual machine is allocated for NSC3 use only.
 - [x] Internet access is available
 - [x] Following TCP/IP4 ports are open from network to server:
@@ -186,7 +186,7 @@ Via delivered tar file:
     sudo ./nsc3-install.sh --silent <Installation path> <SSL cert files location> <host name> <MAP region> <NSC3 release tag> <VALOR enabled true/false>
 
     CLI parameters example:
-    sudo ./nsc3-install.sh --silent /home/ubuntu/nsc3 /home/ubuntu foo.modirumplatforms.com NA release-4.4 false
+    sudo ./nsc3-install.sh --silent /home/ubuntu/nsc3 /home/ubuntu foo.modirumplatforms.com NA release-4.5.3 false
 
     Regional identifiers of MAP selection:
     EU=Europe, NA=North America, AUS=Australia, GCC=GCC states, false=skip maptiles downloading
@@ -207,7 +207,7 @@ sudo ./nsc3-install.sh
     NSC3 installation folder, e.g /home/ubuntu/nsc3: /home/ubuntu/nsc3      
     NSC3 public hostname, e.g foo.modirumplatforms.com: foo.modirumplatforms.com   
     Location of SSL cert files, e.g /home/ubuntu: /home/ubuntu
-    NSC3 Release tag, e.g release: release-4.4
+    NSC3 Release tag, e.g release: release-4.5.3
     Map files options : 
     1. North America map
     2. Europa map
@@ -305,7 +305,7 @@ Start upgrade process:
     
 Note that release tag format is 
     
-    release-<release number>, e.g: release-4.4  
+    release-<release number>, e.g: release-4.5.3  
     
 ### NSC3 Maintenance
 
