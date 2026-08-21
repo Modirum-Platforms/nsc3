@@ -66,7 +66,7 @@ if [ "$silentmode" = false ]; then
     read -p "NSC3 installation folder, e.g /home/ubuntu/nsc3: " NSCHOME
     read -p "NSC3 public hostname, e.g foo.modirumplatforms.com: " PUBLICIP
     read -p "Location of SSL cert files, e.g /home/ubuntu: " SSLFOLDER
-    read -p "NSC3 Release tag, e.g release-4.4.2: " NSC3REL
+    read -p "NSC3 Release tag, e.g release-4.5.3: " NSC3REL
     read -p "Valor enabled, true/false: " VALOR_ENABLED
 fi
 # Check values

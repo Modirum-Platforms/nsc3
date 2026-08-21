@@ -32,7 +32,7 @@ if [ ${1+"true"} ]; then
        echo "sudo ./nsc3-upgrade.sh --silent <NSC3 release tag>"
        echo ""
        echo "CLI parameters example:"
-       echo "sudo ./nsc3-upgrade.sh --silent release-4.4.2"
+       echo "sudo ./nsc3-upgrade.sh --silent release-4.5.3"
        echo ""
        echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
        exit 0
