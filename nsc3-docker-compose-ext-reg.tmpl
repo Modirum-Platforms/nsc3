@@ -208,8 +208,8 @@ services:
     depends_on:
       dumps-perms:
         condition: service_completed_successfully
-    mem_limit: 2048m
-    memswap_limit: 2048m
+    mem_limit: 3072m
+    memswap_limit: 3072m
     logging:
       driver: "json-file"
       options:
@@ -226,10 +226,7 @@ services:
       QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
       QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
       GC_OPTIONS: >-
-        -XX:+UseG1GC
-        -XX:MaxGCPauseMillis=200
-        -XX:+G1PeriodicGCInvokesConcurrent
-        -XX:G1PeriodicGCInterval=300000
+        -XX:+UseZGC
       QUARKUS_PROFILE: prod
       JAVA_TOOL_OPTIONS: >-
         -XX:+UseContainerSupport
@@ -732,8 +729,8 @@ services:
     depends_on:
       dumps-perms:
         condition: service_completed_successfully
-    mem_limit: 2048m
-    memswap_limit: 2048m
+    mem_limit: 3072m
+    memswap_limit: 3072m
     logging:
       driver: "json-file"
       options:
@@ -750,10 +747,8 @@ services:
       QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
       QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
       GC_OPTIONS: >-
-        -XX:+UseG1GC
-        -XX:MaxGCPauseMillis=200
-        -XX:+G1PeriodicGCInvokesConcurrent
-        -XX:G1PeriodicGCInterval=300000
+        -XX:+UseZGC
+        -XX:+ZGenerational
       QUARKUS_PROFILE: prod
       JAVA_TOOL_OPTIONS: >-
         -XX:+UseContainerSupport

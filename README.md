@@ -362,17 +362,37 @@ Netty's direct-buffer ceiling defaults to the full heap size, and a runaway
 allocation kills the container silently. With them, the JVM fails with a
 diagnosable `OutOfMemoryError` and a heap dump in `/dumps` instead.
 
-Garbage collector choice follows container size:
+Garbage collector choice follows container size and pause sensitivity:
 
-- **G1 (`-XX:+UseG1GC`)** for containers up to ~2 GB: `nsc-scheduler-service`,
-  `nsc-auth-service`, `nsc-live-service`, `nsc-comms-service`, `nsc-notify-service`.
-  At these sizes ZGC's sub-millisecond pauses buy nothing over G1's 10-50 ms
-  while costing a few hundred MB of native overhead. ZGC also backs its heap with
-  shared memory, so the heap shows up as `shmem` rather than normal RSS, which
-  makes `docker stats` and OOM reports much harder to read.
-- **ZGC (`-XX:+UseZGC`)** for the large containers: `nsc-stream-in-service`,
-  `nsc-playback-service`, `nsc-network-stream-service`, `nsc-aar-worker`,
-  `nsc-team-bridge-service`. At 4 GB and above the 30% native headroom is ample.
+- **G1 (`-XX:+UseG1GC`)** for the small services: `nsc-scheduler-service`,
+  `nsc-auth-service`, `nsc-live-service`, `nsc-notify-service`. At ~1 GB of heap
+  ZGC's sub-millisecond pauses buy nothing over G1's 10-50 ms while costing a few
+  hundred MB of native overhead. ZGC also backs its heap with shared memory, so
+  the heap shows up as `shmem` rather than normal RSS, which makes `docker stats`
+  and OOM reports harder to read.
+- **ZGC (`-XX:+UseZGC`)** for the large services and for `nsc-comms-service`:
+  `nsc-stream-in-service`, `nsc-playback-service`, `nsc-network-stream-service`,
+  `nsc-aar-worker`, `nsc-team-bridge-service`.
+
+`nsc-comms-service` is on ZGC for pause sensitivity rather than heap size, which
+is why it needs 3072m rather than the 2048m G1 would have been happy with. ZGC
+requires a larger heap than G1 for the same live set, because collection is
+concurrent and the service keeps allocating throughout a cycle. Sizing it at
+roughly 1.5x the G1 heap is the starting point:
+
+    mem_limit  =  heap x 1.15   (ZGC structures)
+                + 256 MB direct + 256 MB metaspace + 128 MB code cache
+                + ~50 MB thread stacks
+
+At 3072m and `MaxRAMPercentage=60` that is a 1843 MB heap with ~260 MB of slack.
+Anything at or below 2048m cannot fit a ZGC comms service and will be OOM-killed.
+
+**On JDK 21 (release-4.5.3 and earlier), ZGC services must also set
+`-XX:+ZGenerational`.** Without it the JVM uses non-generational ZGC, whose
+footprint is considerably larger and will not fit these limits. On JDK 25 (later
+releases) generational mode is the default and the flag has been removed, so it
+must *not* be set there. This is why the same service carries different
+`GC_OPTIONS` in different release blocks of the template.
 
 Note that below a 1792 MB `mem_limit` the JVM does not consider the container a
 "server-class machine" and would default to SerialGC, so the collector must be
@@ -380,19 +400,15 @@ set explicitly.
 
 The collector is deliberately **the same at 16 GB and 32 GB**. The 32 GB
 overrides raise `mem_limit`, and because the heap is a percentage the heap grows
-with it (`nsc-comms-service` goes from a 1228 MB to a 2458 MB heap), but the
-collector does not change. Switching to ZGC only in the 32 GB profile would mean
-the two deployment sizes have different pause behaviour, different native
-footprints and different-looking OOM reports, so a problem reproduced at one
-size would not be comparable to the other — and the 32 GB path gets far less
-testing. Pause sensitivity is a property of the service, not of how much RAM the
-host happens to have: if a service genuinely needs sub-millisecond pauses, it
-needs them at 16 GB too, and the fix is to move it to ZGC at *both* sizes with a
-container sized to match. Decide that from the GC logs described below, not from
-the `mem_limit`.
+with it, but the collector never changes. Pause sensitivity is a property of the
+service, not of how much RAM the host has, so a service that needs ZGC needs it
+at both sizes — sized to fit at the smaller one. Keeping this uniform means an
+incident at one deployment size produces diagnostics comparable to the other.
 
 Each JVM service writes a rotating GC log to `/dumps/gc-<service>.log`
-(3 files x 10 MB). Check it first when investigating a restart.
+(3 files x 10 MB). Check it first when investigating a restart. Post-GC heap
+occupancy over a few days is what tells you whether a `mem_limit` is genuinely
+needed or was sized defensively.
 
 If a service is OOM-killed, raise its `mem_limit` rather than its
 `MaxRAMPercentage` — the percentage is deliberately conservative.
@@ -406,7 +422,7 @@ If a service is OOM-killed, raise its `mem_limit` rather than its
   usually gone by the time an incident is investigated.
 - `main-postgres`, `bus-valkey`, `web-nginx`, `map-service`, `nsc-gateway`,
   `nsc-minio`, `rtmp-server` and `nsc-webrtc-proxy` have no `mem_limit`, while
-  the 16 GB profile already declares ~26 GB of limits. The declared total is
+  the 16 GB profile already declares ~27 GB of limits. The declared total is
   intentionally oversubscribed because the services do not peak together, but
   measure with `docker stats` before adding limits to these — capping
   `main-postgres` without also tuning `shared_buffers`/`work_mem` and `shm_size`
