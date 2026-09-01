@@ -1,0 +1,20 @@
+# docker-compose.override32GB.optional.yml
+# 32GB RAM overrides for the services defined in docker-compose.optional-features.yml.
+#
+# These live in a separate file because Compose *adds* any service that appears
+# only in an override, which would fail with "has neither an image nor a build
+# context specified". Only add this file when optional-features.yml is also on
+# the -f chain:
+#
+#   docker compose -f docker-compose.yml \
+#                  -f docker-compose.optional-features.yml \
+#                  -f docker-compose.override32GB.yml \
+#                  -f docker-compose.override32GB.optional.yml up -d
+
+services:
+  nsc-notify-service:
+    mem_limit: 1024m
+    memswap_limit: 1024m
+  nsc-team-bridge-service:
+    mem_limit: 16384m
+    memswap_limit: 16384m

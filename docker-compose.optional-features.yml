@@ -26,18 +26,23 @@ services:
       QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
       QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
       GC_OPTIONS: >-
-        -XX:+UseZGC
-        -XX:+ZGenerational
+        -XX:+UseG1GC
+        -XX:MaxGCPauseMillis=200
+        -XX:+G1PeriodicGCInvokesConcurrent
+        -XX:G1PeriodicGCInterval=300000
       QUARKUS_PROFILE: prod
       JAVA_TOOL_OPTIONS: >-
         -XX:+UseContainerSupport
         -XX:InitialRAMPercentage=20
-        -XX:MaxRAMPercentage=70
-        -XX:MinRAMPercentage=50
+        -XX:MaxRAMPercentage=65
+        -XX:MaxDirectMemorySize=128m
+        -XX:MaxMetaspaceSize=192m
+        -XX:ReservedCodeCacheSize=96m
         -XX:+ExitOnOutOfMemoryError
         -XX:+HeapDumpOnOutOfMemoryError
         -XX:HeapDumpPath=/dumps
         -Xlog:os+container=info
+        -Xlog:gc:file=/dumps/gc-nsc-notify-service.log:time,uptime,level,tags:filecount=3,filesize=10M
     working_dir: /root
   nsc-team-bridge-service:
     container_name: nsc-team-bridge-service

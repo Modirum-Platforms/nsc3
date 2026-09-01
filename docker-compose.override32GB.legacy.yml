@@ -1,0 +1,17 @@
+# docker-compose.override32GB.legacy.yml
+# 32GB RAM override for nsc-stream-in-service-legacy.
+#
+# That service exists in release-4.5.3 and earlier but was dropped in later
+# releases. Keeping it in docker-compose.override32GB.yml would make the 32GB
+# command fail on newer releases with "has neither an image nor a build context
+# specified", so add this file only when your docker-compose.yml still defines
+# nsc-stream-in-service-legacy:
+#
+#   docker compose -f docker-compose.yml \
+#                  -f docker-compose.override32GB.yml \
+#                  -f docker-compose.override32GB.legacy.yml up -d
+
+services:
+  nsc-stream-in-service-legacy:
+    mem_limit: 16384m
+    memswap_limit: 16384m

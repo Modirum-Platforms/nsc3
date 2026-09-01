@@ -316,6 +316,89 @@ Following override parameters will update settings to reach more optized configu
 
 	docker compose -f docker-compose.yml -f docker-compose.override32GB.yml up -d
 
+The 32GB overrides are split across up to three files, because Docker Compose
+*adds* any service that appears only in an override file and then rejects the
+project with `has neither an image nor a build context specified`. Add the
+companion files only when the matching services are actually defined:
+
+| File | Add it when |
+|---|---|
+| `docker-compose.override32GB.yml` | always |
+| `docker-compose.override32GB.optional.yml` | you also pass `docker-compose.optional-features.yml` |
+| `docker-compose.override32GB.legacy.yml` | your `docker-compose.yml` still has `nsc-stream-in-service-legacy` (release-4.5.3 and earlier) |
+
+Full example with optional features on release-4.5.3:
+
+	docker compose -f docker-compose.yml \
+	               -f docker-compose.optional-features.yml \
+	               -f docker-compose.override32GB.yml \
+	               -f docker-compose.override32GB.optional.yml \
+	               -f docker-compose.override32GB.legacy.yml up -d
+
+You can always check a combination before applying it:
+
+	docker compose -f ... -f ... config -q
+
+#### Container memory model
+
+Every `nsc-*` service runs a JVM under a hard `mem_limit`, which Docker enforces
+as a cgroup limit. If the container exceeds it the kernel SIGKILLs the process —
+the JVM gets no chance to throw `OutOfMemoryError`, write a heap dump, or log
+anything. `docker inspect <container> | grep OOMKilled` and
+`journalctl -k | grep -i oom` are then the only evidence.
+
+The total container footprint is **heap plus native memory**, so `MaxRAMPercentage`
+must leave real headroom:
+
+    mem_limit  >=  heap (MaxRAMPercentage)
+                 + metaspace + code cache
+                 + thread stacks
+                 + direct byte buffers (Netty)
+                 + GC internal structures
+
+`MaxDirectMemorySize`, `MaxMetaspaceSize` and `ReservedCodeCacheSize` are set
+explicitly on the small services. They are guardrails, not budgets: without them
+Netty's direct-buffer ceiling defaults to the full heap size, and a runaway
+allocation kills the container silently. With them, the JVM fails with a
+diagnosable `OutOfMemoryError` and a heap dump in `/dumps` instead.
+
+Garbage collector choice follows container size:
+
+- **G1 (`-XX:+UseG1GC`)** for containers up to ~2 GB: `nsc-scheduler-service`,
+  `nsc-auth-service`, `nsc-live-service`, `nsc-comms-service`, `nsc-notify-service`.
+  At these sizes ZGC's sub-millisecond pauses buy nothing over G1's 10-50 ms
+  while costing a few hundred MB of native overhead. ZGC also backs its heap with
+  shared memory, so the heap shows up as `shmem` rather than normal RSS, which
+  makes `docker stats` and OOM reports much harder to read.
+- **ZGC (`-XX:+UseZGC`)** for the large containers: `nsc-stream-in-service`,
+  `nsc-playback-service`, `nsc-network-stream-service`, `nsc-aar-worker`,
+  `nsc-team-bridge-service`. At 4 GB and above the 30% native headroom is ample.
+
+Note that below a 1792 MB `mem_limit` the JVM does not consider the container a
+"server-class machine" and would default to SerialGC, so the collector must be
+set explicitly.
+
+Each JVM service writes a rotating GC log to `/dumps/gc-<service>.log`
+(3 files x 10 MB). Check it first when investigating a restart.
+
+If a service is OOM-killed, raise its `mem_limit` rather than its
+`MaxRAMPercentage` — the percentage is deliberately conservative.
+
+#### Known capacity limitations
+
+- The `dumps` volume has no size cap. `nsc-stream-in-service` can write a
+  multi-GB heap dump on failure; prune `/dumps` periodically.
+- Log retention is `max-file: 10` x `max-size: 100m` per container, so worst
+  case is roughly 17 GB across the stack. This is also why JVM startup lines are
+  usually gone by the time an incident is investigated.
+- `main-postgres`, `bus-valkey`, `web-nginx`, `map-service`, `nsc-gateway`,
+  `nsc-minio`, `rtmp-server` and `nsc-webrtc-proxy` have no `mem_limit`, while
+  the 16 GB profile already declares ~26 GB of limits. The declared total is
+  intentionally oversubscribed because the services do not peak together, but
+  measure with `docker stats` before adding limits to these — capping
+  `main-postgres` without also tuning `shared_buffers`/`work_mem` and `shm_size`
+  trades one failure mode for another.
+
 #### Using overrides in case of adding optional NSC3 features
 
 As example 
@@ -361,6 +444,17 @@ Check computer free RAM memory:
 Container status:
 
     sudo docker stats
+
+Check whether a container was killed by the kernel out-of-memory killer:
+
+    sudo docker inspect <container name> --format '{{.State.OOMKilled}} {{.State.ExitCode}} {{.RestartCount}}'
+    sudo journalctl -k --since "-24h" | grep -i -E 'oom-kill|Memory cgroup out of memory'
+
+In the kernel log, `constraint=CONSTRAINT_MEMCG` means the container exceeded its
+own `mem_limit` while the host still had free RAM — raise that service's
+`mem_limit`. `constraint=CONSTRAINT_NONE` means the host itself ran out, which
+needs the whole profile rebalanced. For a ZGC service the Java heap appears as
+`shmem-rss` in the kill report, not `anon-rss`.
 
 #### Update SSL certification
 
