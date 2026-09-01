@@ -13,5 +13,5 @@
 
 services:
   nsc-stream-in-service-legacy:
-    mem_limit: 16384m
-    memswap_limit: 16384m
+    mem_limit: 12288m
+    memswap_limit: 12288m

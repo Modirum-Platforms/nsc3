@@ -144,8 +144,8 @@ services:
     networks: 
       - nsc-network
     restart: unless-stopped
-    mem_limit: 8192m
-    memswap_limit: 8192m
+    mem_limit: 6144m
+    memswap_limit: 6144m
     environment:
       QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
       QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
@@ -155,11 +155,15 @@ services:
       JAVA_TOOL_OPTIONS: >-
         -XX:+UseContainerSupport
         -XX:InitialRAMPercentage=20
-        -XX:MaxRAMPercentage=70
+        -XX:MaxRAMPercentage=65
+        -XX:MaxDirectMemorySize=512m
+        -XX:MaxMetaspaceSize=256m
+        -XX:ReservedCodeCacheSize=128m
         -XX:+ExitOnOutOfMemoryError
         -XX:+HeapDumpOnOutOfMemoryError
         -XX:HeapDumpPath=/dumps
         -Xlog:os+container=info
+        -Xlog:gc:file=/dumps/gc-nsc-stream-in-service.log:time,uptime,level,tags:filecount=3,filesize=10M
     working_dir: /root
   nsc-live-service:
     container_name: nsc-live-service
@@ -628,8 +632,8 @@ services:
     networks: 
       - nsc-network
     restart: unless-stopped
-    mem_limit: 8192m
-    memswap_limit: 8192m
+    mem_limit: 6144m
+    memswap_limit: 6144m
     environment:
       QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
       QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
@@ -640,11 +644,15 @@ services:
       JAVA_TOOL_OPTIONS: >-
         -XX:+UseContainerSupport
         -XX:InitialRAMPercentage=20
-        -XX:MaxRAMPercentage=70
+        -XX:MaxRAMPercentage=65
+        -XX:MaxDirectMemorySize=512m
+        -XX:MaxMetaspaceSize=256m
+        -XX:ReservedCodeCacheSize=128m
         -XX:+ExitOnOutOfMemoryError
         -XX:+HeapDumpOnOutOfMemoryError
         -XX:HeapDumpPath=/dumps
         -Xlog:os+container=info
+        -Xlog:gc:file=/dumps/gc-nsc-stream-in-service.log:time,uptime,level,tags:filecount=3,filesize=10M
     working_dir: /root
   nsc-stream-in-service-legacy:
     container_name: nsc-stream-in-service-legacy
@@ -664,8 +672,8 @@ services:
     networks: 
       - nsc-network
     restart: unless-stopped
-    mem_limit: 8192m
-    memswap_limit: 8192m
+    mem_limit: 6144m
+    memswap_limit: 6144m
     environment:
       QUARKUS_REDIS_MAX_POOL_WAITING: "2048"
       QUARKUS_REDIS_MAX_WAITING_HANDLERS: "4096"
@@ -676,11 +684,15 @@ services:
       JAVA_TOOL_OPTIONS: >-
         -XX:+UseContainerSupport
         -XX:InitialRAMPercentage=20
-        -XX:MaxRAMPercentage=70
+        -XX:MaxRAMPercentage=65
+        -XX:MaxDirectMemorySize=512m
+        -XX:MaxMetaspaceSize=256m
+        -XX:ReservedCodeCacheSize=128m
         -XX:+ExitOnOutOfMemoryError
         -XX:+HeapDumpOnOutOfMemoryError
         -XX:HeapDumpPath=/dumps
         -Xlog:os+container=info
+        -Xlog:gc:file=/dumps/gc-nsc-stream-in-service-legacy.log:time,uptime,level,tags:filecount=3,filesize=10M
     working_dir: /root
   nsc-live-service:
     container_name: nsc-live-service

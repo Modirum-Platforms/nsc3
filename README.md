@@ -387,6 +387,15 @@ roughly 1.5x the G1 heap is the starting point:
 At 3072m and `MaxRAMPercentage=60` that is a 1843 MB heap with ~260 MB of slack.
 Anything at or below 2048m cannot fit a ZGC comms service and will be OOM-killed.
 
+`nsc-stream-in-service` is sized at 6144m (12288m at 32 GB) rather than the 8192m
+it used to have, funding the larger comms limit. Because that shrinks its budget,
+it now has explicit native caps (512 MB direct, 256 MB metaspace, 128 MB code
+cache) and `MaxRAMPercentage=65`, giving a 3994 MB heap and ~550 MB of slack.
+Previously it had no `MaxDirectMemorySize`, which defaults to `Xmx` — the same
+uncapped-native condition that caused the comms OOM kills. **This is the least
+measured limit in the file:** stream-in's live set has never been observed, so
+check its GC log before assuming 6144m is enough for your ingest load.
+
 **On JDK 21 (release-4.5.3 and earlier), ZGC services must also set
 `-XX:+ZGenerational`.** Without it the JVM uses non-generational ZGC, whose
 footprint is considerably larger and will not fit these limits. On JDK 25 (later
@@ -422,7 +431,7 @@ If a service is OOM-killed, raise its `mem_limit` rather than its
   usually gone by the time an incident is investigated.
 - `main-postgres`, `bus-valkey`, `web-nginx`, `map-service`, `nsc-gateway`,
   `nsc-minio`, `rtmp-server` and `nsc-webrtc-proxy` have no `mem_limit`, while
-  the 16 GB profile already declares ~27 GB of limits. The declared total is
+  the 16 GB profile already declares ~25 GB of limits. The declared total is
   intentionally oversubscribed because the services do not peak together, but
   measure with `docker stats` before adding limits to these — capping
   `main-postgres` without also tuning `shared_buffers`/`work_mem` and `shm_size`
