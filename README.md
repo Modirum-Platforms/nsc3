@@ -378,6 +378,19 @@ Note that below a 1792 MB `mem_limit` the JVM does not consider the container a
 "server-class machine" and would default to SerialGC, so the collector must be
 set explicitly.
 
+The collector is deliberately **the same at 16 GB and 32 GB**. The 32 GB
+overrides raise `mem_limit`, and because the heap is a percentage the heap grows
+with it (`nsc-comms-service` goes from a 1228 MB to a 2458 MB heap), but the
+collector does not change. Switching to ZGC only in the 32 GB profile would mean
+the two deployment sizes have different pause behaviour, different native
+footprints and different-looking OOM reports, so a problem reproduced at one
+size would not be comparable to the other — and the 32 GB path gets far less
+testing. Pause sensitivity is a property of the service, not of how much RAM the
+host happens to have: if a service genuinely needs sub-millisecond pauses, it
+needs them at 16 GB too, and the fix is to move it to ZGC at *both* sizes with a
+container sized to match. Decide that from the GC logs described below, not from
+the `mem_limit`.
+
 Each JVM service writes a rotating GC log to `/dumps/gc-<service>.log`
 (3 files x 10 MB). Check it first when investigating a restart.
 
@@ -398,6 +411,15 @@ If a service is OOM-killed, raise its `mem_limit` rather than its
   measure with `docker stats` before adding limits to these — capping
   `main-postgres` without also tuning `shared_buffers`/`work_mem` and `shm_size`
   trades one failure mode for another.
+
+#### Upgrading from bus-redis to bus-valkey
+
+Releases after 4.5.3 replace `bus-redis` with `bus-valkey`, and the volume is
+renamed from `bus-redis-volume` to `bus-valkey-volume`. The bus holds only
+ephemeral state, so there is no data migration — Valkey simply starts with an
+empty volume. After the upgrade the old volume can be reclaimed:
+
+    sudo docker volume rm bus-redis-volume
 
 #### Using overrides in case of adding optional NSC3 features
 

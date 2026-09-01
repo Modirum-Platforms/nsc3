@@ -40,7 +40,7 @@ services:
       - nsc-network
     restart: unless-stopped
     volumes:
-      - bus-redis-volume:/data:rw
+      - bus-valkey-volume:/data:rw
     working_dir: /root
   nsc-scheduler-service:
     container_name: nsc-scheduler-service
@@ -475,10 +475,11 @@ networks:
 volumes:
   main-postgres-pg15-volume:
     name: main-postgres-pg15-volume
-  # Keeps the pre-valkey volume name so existing deployments retain their data.
-  # Renaming this to bus-valkey-volume requires an explicit data migration.
-  bus-redis-volume:
-    name: bus-redis-volume
+  # Valkey holds only ephemeral bus state, so the volume is renamed outright
+  # rather than migrated. Upgrading from a bus-redis deployment starts with an
+  # empty volume; the old bus-redis-volume can be removed with `docker volume rm`.
+  bus-valkey-volume:
+    name: bus-valkey-volume
   minio-volume:
     name: minio-volume
   dumps: {} 
