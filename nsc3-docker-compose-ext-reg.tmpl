@@ -40,7 +40,7 @@ services:
       - nsc-network
     restart: unless-stopped
     volumes:
-      - bus-redis-volume:/data:rw
+      - bus-valkey-volume:/data:rw
     working_dir: /root
   nsc-scheduler-service:
     container_name: nsc-scheduler-service
