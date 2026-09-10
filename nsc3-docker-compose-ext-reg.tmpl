@@ -40,7 +40,7 @@ services:
       - nsc-network
     restart: unless-stopped
     volumes:
-      - bus-redis-volume:/data:rw
+      - bus-valkey-volume:/data:rw
     working_dir: /root
   nsc-scheduler-service:
     container_name: nsc-scheduler-service
@@ -434,7 +434,7 @@ services:
       - MINIO_PORT=9000
       - MINIO_ACCESS_KEY=minioclient
       - MINIO_SECRET_KEY=$MINIOSECRET
-      - REDIS_ENDPOINT=bus-valkey
+      - REDIS_ENDPOINT=bus-
       - REDIS_PORT=6379
   dumps-perms:
     image: $NSC3REG/dev/nsc-scheduler-service:$NSC3REL   # tai joku muu teidän image
