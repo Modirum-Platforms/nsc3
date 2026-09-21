@@ -316,6 +316,16 @@ Following override parameters will update settings to reach more optized configu
 
 	docker compose -f docker-compose.yml -f docker-compose.override32GB.yml up -d
 
+
+#### Upgrading from bus-redis to bus-valkey
+
+Releases after 4.5.3 replace `bus-redis` with `bus-valkey`, and the volume is
+renamed from `bus-redis-volume` to `bus-valkey-volume`. The bus holds only
+ephemeral state, so there is no data migration — Valkey simply starts with an
+empty volume. After the upgrade the old volume can be reclaimed:
+
+    sudo docker volume rm bus-redis-volume
+
 #### Using overrides in case of adding optional NSC3 features
 
 As example 
@@ -361,6 +371,17 @@ Check computer free RAM memory:
 Container status:
 
     sudo docker stats
+
+Check whether a container was killed by the kernel out-of-memory killer:
+
+    sudo docker inspect <container name> --format '{{.State.OOMKilled}} {{.State.ExitCode}} {{.RestartCount}}'
+    sudo journalctl -k --since "-24h" | grep -i -E 'oom-kill|Memory cgroup out of memory'
+
+In the kernel log, `constraint=CONSTRAINT_MEMCG` means the container exceeded its
+own `mem_limit` while the host still had free RAM — raise that service's
+`mem_limit`. `constraint=CONSTRAINT_NONE` means the host itself ran out, which
+needs the whole profile rebalanced. For a ZGC service the Java heap appears as
+`shmem-rss` in the kill report, not `anon-rss`.
 
 #### Update SSL certification
 
