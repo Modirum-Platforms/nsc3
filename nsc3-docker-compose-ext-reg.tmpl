@@ -394,7 +394,8 @@ services:
       - "25204:25204/tcp"
       - "25205:25205/tcp"
       - "25206:25206/tcp"
-      - "443:443/tcp"
+      # nginx listens on unprivileged 8443 inside the container (runs as UID 1001)
+      - "443:8443/tcp"
       - "40000-40007:40000-40007/tcp"
     restart: unless-stopped
     volumes:
