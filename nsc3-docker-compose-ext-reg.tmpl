@@ -461,6 +461,8 @@ services:
   dumps-perms:
     image: $NSC3REG/dev/nsc-scheduler-service:$NSC3REL
     user: "0:0"
+    networks:
+      - nsc-network
     volumes:
       - dumps:/dumps
     entrypoint: ["sh", "-lc"]
@@ -994,6 +996,8 @@ services:
   dumps-perms:
     image: $NSC3REG/nsc-scheduler-service:$NSC3REL   # tai joku muu teidän image
     user: "0:0"
+    networks:
+      - nsc-network
     volumes:
       - dumps:/dumps
     entrypoint: ["sh", "-lc"]
@@ -1503,6 +1507,8 @@ services:
   dumps-perms:
     image: $NSC3REG/nsc-scheduler-service:$NSC3REL   # tai joku muu teidän image
     user: "0:0"
+    networks:
+      - nsc-network
     volumes:
       - dumps:/dumps
     entrypoint: ["sh", "-lc"]
