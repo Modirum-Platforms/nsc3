@@ -6,7 +6,6 @@ TIMESTAMP=$(date +%Y%m%d%H%M)
 source ./nsc-host.env
 chmod u+x *.sh
 PREVRELEASE=$(cat $NSCHOME/docker-compose.yml | grep modirumplatforms.azurecr.io/main-postgres: | cut -d\: -f3) 2> /dev/null
-export EXTIP=$(host $PUBLICIP | awk '{print $4}') 2> /dev/null
 export MINIOSECRET=$(sudo docker inspect nsc-minio | grep MINIO_ROOT_PASSWORD= | awk '{print $1}' | sed s/MINIO_ROOT_PASSWORD=// | sed -e 's/[""]//g') 2> /dev/null
 silentmode=false
 
@@ -52,6 +51,12 @@ if [ "$silentmode" = false ]; then
     echo "++++++++++++++++++++++++++++++++++++++++"
     read -p "NSC3 Release tag for upgrading, e.g release-4.4.2: " NSC3REL
 fi
+EXTIP=$(LC_ALL=C host -t A "$PUBLICIP" | awk 'NF == 4 && $2 == "has" && $3 == "address" { print $4; exit }')
+if [ -z "$EXTIP" ]; then
+    EXTIP=127.0.0.1
+    echo "*** No IPv4 address found in DNS for $PUBLICIP; using $EXTIP. Remote WebRTC may not work. ***" >&2
+fi
+export EXTIP
 cd $NSCHOME
 # Check values
 if grep -q $NSC3REL $NSCHOME/nsc3-docker-compose-ext-reg.tmpl; then     

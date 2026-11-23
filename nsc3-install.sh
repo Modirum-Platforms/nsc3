@@ -71,6 +71,14 @@ if [ "$silentmode" = false ]; then
 fi
 # Check values
 if [ -d $NSCHOME ]; then echo "*** $NSCHOME 'Installation folder found' ***"; else echo "*** $NSCHOME 'Installation folder is missing! Exit' ***"; exit 0; fi
+EXTIP=$(LC_ALL=C host -t A "$PUBLICIP" | awk 'NF == 4 && $2 == "has" && $3 == "address" { print $4; exit }')
+if [ -z "$EXTIP" ]; then
+    EXTIP=127.0.0.1
+    echo "*** No IPv4 address found in DNS for $PUBLICIP; using $EXTIP. Remote WebRTC may not work. ***" >&2
+else
+    echo "*** $EXTIP IPv4 address found in DNS for $PUBLICIP ***"
+fi
+export EXTIP
 # Create dictories
 if [ ! -d $NSCHOME/logs ]; then 
    mkdir $NSCHOME/logs 2> /dev/null 
@@ -171,13 +179,6 @@ echo "export PUBLICIP=$PUBLICIP" > $NSCHOME/nsc-host.env
 echo "export NSCHOME=$NSCHOME" >> $NSCHOME/nsc-host.env
 echo "export VALOR_ENABLED=$VALOR_ENABLED" >> $NSCHOME/nsc-host.env
 echo "export TEAM_BRIDGE_ENABLED=$TEAM_BRIDGE_ENABLED" >> $NSCHOME/nsc-host.env
-if [ $(host $PUBLICIP | awk '{print $3}') == "not" ]; then 
-     export EXTIP="127.0.0.1" 2> /dev/null;
-     echo "*** No ip address from dns to domain name $PUBLICIP , localhost ip 127.0.0.1 used instead. Most likely system is not working properly. Please fix dns issues requarding domain name! ***";
-else 
-     export EXTIP=$(host $PUBLICIP | awk '{print $4}') 2> /dev/null;
-     echo "*** $EXTIP ip address found from dns to domain name $PUBLICIP ***";
-fi  
 #  Modify maptiles rights level
 chmod 644 $NSCHOME/mapdata/*.* 2> /dev/null
 # Backup old and create docker-compose.yml file
